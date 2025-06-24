@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1750242111378,
+      "tag": "0000_left_moira_mactaggert",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750244940553,
+      "tag": "0001_married_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750404906255,
+      "tag": "0002_slimy_captain_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750405184325,
+      "tag": "0003_outstanding_molly_hayes",
+      "breakpoints": true
+    }
+  ]
+}
