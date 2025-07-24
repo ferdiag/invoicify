@@ -1,5 +1,5 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
-
+import { InferSelectModel } from "drizzle-orm";
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -20,3 +20,4 @@ export const customers = pgTable("customers", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
+export type UserType = InferSelectModel<typeof users>;

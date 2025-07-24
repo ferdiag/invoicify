@@ -7,7 +7,7 @@ import { api } from "../lib/apil";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const AddCompanyData = () => {
+const AddCompanyData: React.FC = () => {
   const { user, setUser } = useUserStore();
   const [newUser, setNewUser] = useState<User | null>(user);
   const { t } = useTranslation();

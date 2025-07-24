@@ -2,8 +2,9 @@ import { useUserStore } from "../store/userStore";
 import CTAButton from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import type React from "react";
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useUserStore();
   const navigate = useNavigate();
@@ -22,7 +23,6 @@ const Dashboard = () => {
         <CTAButton onClick={() => navigate("/create-invoice")}>
           {t("buttons.createInvoice")}
         </CTAButton>
-        {/* Additional dashboard content can go here */}
       </div>
     </div>
   );

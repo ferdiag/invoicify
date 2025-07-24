@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
 import CTAButton from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import type React from "react";
 
-const Home = () => {
+const Home: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (

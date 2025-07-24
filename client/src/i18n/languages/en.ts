@@ -3,22 +3,27 @@ export default {
   home: {
     welcome:
       "Invoicify – Your Smart Invoicing Assistant Invoicify is a modern web application that helps freelancers, self-employed professionals, and small businesses create professional invoices quickly and easily. With Invoicify, you can: Create and manage invoices directly in your browser Store and auto-suggest customer data Reuse common services or items for faster billing Keep all your invoices organized in a clear dashboard",
-    getStarted: "register",
+    getStarted: "Register",
   },
   auth: {
-    registerSuccess: "register sucessful. Please login",
-    loginSuccess: "login successful.",
+    errors: { defaultError: "Es gab leider einen Fehler" },
+    placeholders: {
+      email: "E-Mail",
+      password: "Password",
+    },
+    registerSuccess: "Register sucessful. Please login",
+    loginSuccess: "Login successful.",
   },
   dashboard: {
-    title: "add new customer",
+    title: "Add new customer",
   },
   buttons: {
-    register: "register",
-    login: "login",
-    save: "save",
-    toAddCustomer: "add customer",
+    register: "Register",
+    login: "Login",
+    save: "Save",
+    toAddCustomer: "Add customer",
     toCompanyData: "edit company data",
-    createInvoice: "create invoice",
+    createInvoice: "Create invoice",
   },
   commonLabels: {
     name: "Name",
@@ -31,14 +36,14 @@ export default {
     country: "Country",
   },
   addCustomer: {
-    addSuccess: "customer successfully added",
-    labels: "commonLabels", // Reference to commonLabels
+    addSuccess: "Customer successfully added",
+    labels: "CommonLabels",
   },
   addCompanyData: {
     title: "Edit company data",
     success: "Company data saved successfully",
     noUser: "No user logged in",
-    labels: "commonLabels", // Reference to commonLabels
+    labels: "CommonLabels",
   },
   invoice: {
     createTitle: "Create Invoice",

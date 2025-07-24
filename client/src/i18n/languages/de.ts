@@ -5,6 +5,13 @@ export default {
     getStarted: "Zur Anmeldung",
   },
   auth: {
+    errors: {
+      defaultError: "An error occurred. Please try again.",
+    },
+    placeholders: {
+      email: "E-Mail",
+      password: "Passwort",
+    },
     registerSuccess: "Registrierung erfolgreich! Bitte anmelden.",
     loginSuccess: "Login war erfolgreich",
   },

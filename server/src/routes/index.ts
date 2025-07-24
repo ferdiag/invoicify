@@ -8,7 +8,7 @@ import { CustomerType } from "../types/database.type";
 
 export const routes = async (fastify: FastifyInstance) => {
   fastify.post("/register", async (req, res) => {
-    const response = await handleRegister(req.body as Register, fastify.log);
+    const response = await handleRegister(req.body as Register);
     return res.status(201).send(response);
   });
   fastify.post("/login", async (req, res) => {

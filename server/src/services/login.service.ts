@@ -1,22 +1,32 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/client";
 import { customers, users } from "../db/schema";
-import { UserType } from "../types/database.type";
+import { UserInsertType, UserSelectType } from "../types/database.type";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ERROR_MESSAGES } from "../constants/errorMessages";
+import createHttpError from "http-errors";
 
-export const handleLogin = async (data: UserType) => {
+export const handleLogin = async (data: UserInsertType) => {
   const { email, password } = data;
-  const [user] = await db.select().from(users).where(eq(users.email, email));
+
+  let user: UserSelectType | undefined;
+
+  try {
+    [user] = await db.select().from(users).where(eq(users.email, email));
+  } catch {
+    throw createHttpError.InternalServerError(
+      ERROR_MESSAGES.DATABASE_QUERY_FAILED
+    );
+  }
 
   if (!user) {
-    throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
+    throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
 
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) {
-    throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
+    throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
 
   const token = jwt.sign(
@@ -25,10 +35,10 @@ export const handleLogin = async (data: UserType) => {
     { expiresIn: "1h" }
   );
 
-  const userCustomers = await db
+  const targetCustomer = await db
     .select()
     .from(customers)
-    .where(eq(customers.userId, user.id));
+    .where(eq(customers.userId, user.id!));
 
   const { password: _, ...userdata } = user;
 
@@ -36,7 +46,7 @@ export const handleLogin = async (data: UserType) => {
     token,
     user: {
       ...userdata,
-      customers: userCustomers,
+      customers: targetCustomer,
     },
   };
 };

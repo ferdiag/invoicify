@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { createFormData } from "../factories/customerFormData";
 import DynamicForm from "../components/DynamicForm";
 
-const Addcustomer = () => {
+const Addcustomer: React.FC = () => {
   const initCustomer = {
     name: "",
     contact: "",

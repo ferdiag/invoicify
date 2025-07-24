@@ -13,9 +13,8 @@ type AuthData = {
   password: string;
 };
 
-const Auth = () => {
+const Auth: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("register");
-  console.log(mode);
   const navigate = useNavigate();
   const {
     register,
@@ -32,6 +31,7 @@ const Auth = () => {
       const res = await api.post(`/api/${mode}`, data);
 
       if (res.status === 200 || res.status === 201) {
+        console.log("der status", res.status);
         if (mode === "login") {
           toast.success(t("auth.loginSuccess"), { position: "bottom-center" });
           setUser(res.data.user);
@@ -46,13 +46,11 @@ const Auth = () => {
       }
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      const message = error?.response?.data?.message
-        ? t(`errors.${error.response.data.message}`, error.response.data)
-        : error?.message
-        ? t("errors.unknown")
-        : t("errors.unknown");
-
-      toast.error(message, { position: "bottom-center" });
+      let message = error?.response?.data?.message
+        ? t(`${error.response.data.message}`, error.response.data)
+        : error?.message;
+      message = message ?? t("auth.defaultError");
+      toast.error(String(message), { position: "bottom-center" });
     }
   };
 
@@ -81,7 +79,7 @@ const Auth = () => {
         >
           <input
             type="email"
-            placeholder={t("placeholders.email")}
+            placeholder={t("auth.placeholders.email")}
             className="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600"
             {...register("email", { required: t("validation.emailRequired") })}
           />
@@ -91,7 +89,7 @@ const Auth = () => {
 
           <input
             type="password"
-            placeholder={t("placeholders.password")}
+            placeholder={t("auth.placeholders.password")}
             className="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600"
             {...register("password", {
               required: t("validation.passwordRequired"),
