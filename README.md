@@ -11,7 +11,6 @@
 - Company data management
 - Invoice creation with:
   - Dynamic product list
-  - VAT configuration
   - Automatic calculation of net/gross amounts
   - Due date management
 - Responsive and modern UI (Tailwind CSS)
