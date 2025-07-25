@@ -10,8 +10,9 @@ const fastify = Fastify({
 dotenv.config();
 async function main() {
   await fastify.register(cors, {
-    origin: "http://localhost:5173", // oder true für alle Quellen
-    credentials: true, // falls du Cookies/Auth-Header senden willst
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   });
   await fastify.register(routes, { prefix: "api" });
   await registerErrorHandler(fastify);

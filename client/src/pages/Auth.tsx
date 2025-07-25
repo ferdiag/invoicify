@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { api } from "../lib/apil";
+import { api } from "../lib/api";
 import CTAButton from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -31,7 +31,7 @@ const Auth: React.FC = () => {
       const res = await api.post(`/api/${mode}`, data);
 
       if (res.status === 200 || res.status === 201) {
-        console.log("der status", res.status);
+        console.log("user", res.data.user);
         if (mode === "login") {
           toast.success(t("auth.loginSuccess"), { position: "bottom-center" });
           setUser(res.data.user);
@@ -110,13 +110,13 @@ const Auth: React.FC = () => {
             )}
           </div>
 
-          <button
+          <CTAButton
             type="submit"
             disabled={isSubmitting}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             {mode === "login" ? t("buttons.login") : t("buttons.register")}
-          </button>
+          </CTAButton>
         </form>
       </div>
     </div>

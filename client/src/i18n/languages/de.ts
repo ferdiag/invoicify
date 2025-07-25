@@ -15,8 +15,10 @@ export default {
     registerSuccess: "Registrierung erfolgreich! Bitte anmelden.",
     loginSuccess: "Login war erfolgreich",
   },
-  dashboard: {
-    title: "Neuen Kunden hinzufügen",
+  CustomerDetail: {
+    add: "Neuen Kunden hinzufügen",
+    edit: "Änderungen speichern ",
+    addSuccess: "Änderungen erfolgreich gespeichert",
   },
   buttons: {
     register: "Registrieren",
@@ -25,6 +27,8 @@ export default {
     toAddCustomer: "Kunde hinzufügen",
     toCompanyData: "Firmendaten bearbeiten",
     createInvoice: "Rechnung erstellen",
+    toCustomers: "Kunden",
+    viewDetails: "Details",
   },
   commonLabels: {
     name: "Name",

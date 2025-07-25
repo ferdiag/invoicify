@@ -3,7 +3,7 @@ import DynamicForm from "../components/DynamicForm";
 import { useTranslation } from "react-i18next";
 import { createFormData } from "../factories/customerFormData";
 import { useUserStore, type User } from "../store/userStore";
-import { api } from "../lib/apil";
+import { api } from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,7 @@ const AddCompanyData: React.FC = () => {
   const navigate = useNavigate();
 
   if (!user) {
-    return <div>{t("add-company-data.no-user")}</div>;
+    return <div>{t("addCompanyData.noUser")}</div>;
   }
 
   const formData = createFormData(user, t);

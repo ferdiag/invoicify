@@ -14,6 +14,9 @@ const Dashboard: React.FC = () => {
       <div className="max-w-4xl w-full flex flex-col justify-center items-center p-8">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p>Welcome, {user ? user.email : "Guest"}!</p>
+        <CTAButton onClick={() => navigate("/customers")}>
+          {t("buttons.toCustomers")}
+        </CTAButton>
         <CTAButton onClick={() => navigate("/add-customer")}>
           {t("buttons.toAddCustomer")}
         </CTAButton>

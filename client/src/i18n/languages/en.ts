@@ -14,8 +14,10 @@ export default {
     registerSuccess: "Register sucessful. Please login",
     loginSuccess: "Login successful.",
   },
-  dashboard: {
-    title: "Add new customer",
+
+  CustomerDetail: {
+    add: "Add new customer",
+    edit: "edit customer ",
   },
   buttons: {
     register: "Register",
@@ -24,6 +26,8 @@ export default {
     toAddCustomer: "Add customer",
     toCompanyData: "edit company data",
     createInvoice: "Create invoice",
+    toCustomers: "Customers",
+    viewDetails: "View Details",
   },
   commonLabels: {
     name: "Name",

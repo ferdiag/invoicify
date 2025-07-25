@@ -1,8 +1,8 @@
 import type { TFunction } from "i18next";
-import type { Customer } from "../store/userStore";
+import type { InitCustomer } from "../store/userStore";
 
 export const createFormData = (
-  customer: Customer,
+  customer: InitCustomer,
   t: TFunction<"translation", undefined>
 ) => {
   return [

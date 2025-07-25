@@ -12,7 +12,18 @@ export type User = {
   country: string;
   customers: Customer[];
 };
+export type InitCustomer = {
+  name: string;
+  contact: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  zip: string;
+  country: string;
+};
 export type Customer = {
+  id: string;
   name: string;
   contact: string;
   email: string;

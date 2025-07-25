@@ -28,14 +28,14 @@ const CreateInvoice: React.FC = () => {
   };
 
   const handleProductChange = (
-    idx: number,
+    id: number,
     field: string,
     value: string | number
   ) => {
     setInvoiceData((prev) => ({
       ...prev,
       products: prev.products.map((prod, i) =>
-        i === idx
+        i === id
           ? {
               ...prod,
               [field]:
@@ -55,10 +55,10 @@ const CreateInvoice: React.FC = () => {
     }));
   };
 
-  const handleRemoveProduct = (idx: number) => {
+  const handleRemoveProduct = (id: number) => {
     setInvoiceData((prev) => ({
       ...prev,
-      products: prev.products.filter((_, i) => i !== idx),
+      products: prev.products.filter((_, i) => i !== id),
     }));
   };
 
@@ -102,8 +102,8 @@ const CreateInvoice: React.FC = () => {
           className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600"
         >
           <option value="">{t("invoice.selectCustomerPlaceholder")}</option>
-          {user?.customers.map((customer: Customer, idx: number) => (
-            <option key={idx} value={customer.name}>
+          {user?.customers.map((customer: Customer, id: number) => (
+            <option key={id} value={customer.name}>
               {customer.name} ({customer.contact})
             </option>
           ))}
@@ -125,15 +125,15 @@ const CreateInvoice: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {invoiceData.products.map((product: Product, idx: number) => (
-                <tr key={idx}>
+              {invoiceData.products.map((product: Product, id: number) => (
+                <tr key={id}>
                   <td className="px-2 py-1">
                     <input
                       type="text"
                       placeholder={t("invoice.productName")}
                       value={product.name}
                       onChange={(e) =>
-                        handleProductChange(idx, "name", e.target.value)
+                        handleProductChange(id, "name", e.target.value)
                       }
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full"
                     />
@@ -145,7 +145,7 @@ const CreateInvoice: React.FC = () => {
                       placeholder={t("invoice.quantity")}
                       value={product.quantity}
                       onChange={(e) =>
-                        handleProductChange(idx, "quantity", e.target.value)
+                        handleProductChange(id, "quantity", e.target.value)
                       }
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-20 text-center"
                     />
@@ -158,7 +158,7 @@ const CreateInvoice: React.FC = () => {
                       placeholder={t("invoice.price")}
                       value={product.price}
                       onChange={(e) =>
-                        handleProductChange(idx, "price", e.target.value)
+                        handleProductChange(id, "price", e.target.value)
                       }
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-24 text-center"
                     />
@@ -167,7 +167,7 @@ const CreateInvoice: React.FC = () => {
                     {invoiceData.products.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => handleRemoveProduct(idx)}
+                        onClick={() => handleRemoveProduct(id)}
                         className="bg-red-600 text-white px-2 rounded"
                       >
                         &minus;
