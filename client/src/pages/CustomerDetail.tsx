@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { useUserStore } from "../store/userStore";
-import type { Customer, InitCustomer } from "../store/userStore";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createFormData } from "../factories/customerFormData";
+import { createFormData } from "../factories/createForms";
 import DynamicForm from "../components/DynamicForm";
+import type { Customer, InitCustomer } from "../store/types";
 
 const CustomerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,30 +23,37 @@ const CustomerDetail: React.FC = () => {
     country: "",
   });
   useEffect(() => {
-    const targetCustomer: Customer | undefined = user?.customers.find(
+    const payload: Customer | undefined = user?.customers.find(
       (cust) => cust.id === id
     );
-    if (targetCustomer) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, ...updatedCustomer } = targetCustomer;
+    if (payload) {
+      const { ...updatedCustomer } = payload;
       setCustomer(updatedCustomer);
     }
   }, [user?.customers, id, setCustomer]);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const formData = createFormData(customer, t);
+  const keys: (keyof Customer)[] = [
+    "name",
+    "email",
+    "phone",
+    "contact",
+    "address",
+    "zip",
+    "city",
+    "country",
+  ];
 
-  const handleSaveNewcustomer = async () => {
+  const formData = createFormData<Customer>(customer, t, keys);
+  const handleSaveNewCustomer = async () => {
     if (!user) return;
-    const targetCustomer = { ...customer, userId: user.id };
-    let response;
-    if (id) {
-      console.log("Updating customer with ID:", id);
-      response = await api.patch(`/api/customer/${id}`, targetCustomer);
-    } else {
-      response = await api.post("/api/customer", targetCustomer);
-    }
+    const payload = { ...customer, userId: user.id };
+
+    const path = id ? `/api/customer/${id}` : "/api/customer";
+    const action = id ? "patch" : "post";
+
+    const response = await api[action](path, payload);
 
     if ([200, 201].includes(response.status)) {
       if (id) {
@@ -70,7 +77,7 @@ const CustomerDetail: React.FC = () => {
       title={id ? t("CustomerDetail.edit") : t("CustomerDetail.add")}
       fields={formData}
       setState={setCustomer}
-      onSubmit={handleSaveNewcustomer}
+      onSubmit={handleSaveNewCustomer}
       submitLabel={t("buttons.save")}
     />
   );

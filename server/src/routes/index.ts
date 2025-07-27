@@ -7,6 +7,8 @@ import { handleAddCustomer } from "../services/new.customer.service";
 import { CustomerType } from "../types/database.type";
 import { handleEditCustomer } from "../services/edit.customer.service";
 import { handleDeleteCustomer } from "../services/delete.customer";
+import { handleEditCompany } from "../services/edit.company";
+import { UserType } from "../db/schema";
 
 export const routes = async (fastify: FastifyInstance) => {
   fastify.post("/register", async (req, res) => {
@@ -40,4 +42,14 @@ export const routes = async (fastify: FastifyInstance) => {
       return res.status(200).send(response);
     }
   );
+  fastify.patch<{
+    Params: { id: string };
+    Body: Partial<UserType>;
+  }>("/user/:id", async (req, res) => {
+    const { id } = req.params;
+    const body = req.body;
+
+    const response = await handleEditCompany(id, body);
+    return res.status(200).send(response);
+  });
 };

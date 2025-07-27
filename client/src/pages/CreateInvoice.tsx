@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useUserStore, type Customer } from "../store/userStore";
 import { useTranslation } from "react-i18next";
+import { useUserStore } from "../store/userStore";
+import type { Customer } from "../store/types";
 
 type Product = {
   name: string;

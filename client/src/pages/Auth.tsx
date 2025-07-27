@@ -3,8 +3,6 @@ import { useState } from "react";
 import { api } from "../lib/api";
 import CTAButton from "../components/Button";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
 
@@ -24,33 +22,20 @@ const Auth: React.FC = () => {
   } = useForm<AuthData>();
 
   const { t } = useTranslation();
-  const { setUser, setToken } = useUserStore();
-
+  const { loginSuccess, registerSuccess, handleApiError } = useUserStore();
   const onSubmit = async (data: AuthData) => {
     try {
       const res = await api.post(`/api/${mode}`, data);
 
-      if (res.status === 200 || res.status === 201) {
-        console.log("user", res.data.user);
+      if ([200, 201].includes(res.status)) {
         if (mode === "login") {
-          toast.success(t("auth.loginSuccess"), { position: "bottom-center" });
-          setUser(res.data.user);
-          setToken(res.data.token);
-          navigate("/dashboard");
-          return;
+          loginSuccess(res.data, t("auth.loginSuccess"), navigate);
+        } else {
+          registerSuccess(reset, t("auth.registerSuccess"), setMode);
         }
-
-        reset();
-        toast.success(t("auth.registerSuccess"));
-        setMode("login");
       }
-    } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
-      let message = error?.response?.data?.message
-        ? t(`${error.response.data.message}`, error.response.data)
-        : error?.message;
-      message = message ?? t("auth.defaultError");
-      toast.error(String(message), { position: "bottom-center" });
+    } catch (err: unknown) {
+      handleApiError(err, t);
     }
   };
 

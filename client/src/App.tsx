@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
-import AddCompanyData from "./pages/AddCompanyData";
+import AddCompanyData from "./pages/EditCompanyData";
 import CreateInvoice from "./pages/CreateInvoice";
 import CustomersPage from "./pages/CustomersPage";
 import CustomerDetail from "./pages/CustomerDetail";

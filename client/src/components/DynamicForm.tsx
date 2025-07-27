@@ -28,7 +28,6 @@ const DynamicForm = <T,>({
     const { id, value } = e.target;
     console.log(id, value);
     setState((prevState) => {
-      console.log("Previous State:", prevState);
       return { ...prevState, [id]: value };
     });
   };
