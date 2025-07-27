@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const AddCompanyData: React.FC = () => {
   const { user, setUser } = useUserStore();
-  const [newUser, setNewUser] = useState<User | null>(user);
+  const [newUser, setNewUser] = useState<Partial<User>>(user!);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -18,10 +18,7 @@ const AddCompanyData: React.FC = () => {
   }
 
   const formData = createFormData(user, t);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setNewUser({ ...user, [id]: value });
-  };
+
   const handleUpdateCompanyData = async () => {
     if (newUser) {
       const response = await api.put("/api/user", newUser);
@@ -36,7 +33,7 @@ const AddCompanyData: React.FC = () => {
     <DynamicForm
       title={t("addCompanyData.title")}
       fields={formData}
-      onChange={handleChange}
+      setState={setNewUser}
       onSubmit={handleUpdateCompanyData}
       submitLabel={t("buttons.save")}
     />

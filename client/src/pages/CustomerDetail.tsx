@@ -12,7 +12,7 @@ const CustomerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, setUser } = useUserStore();
 
-  const [customer, setCustomer] = useState<InitCustomer>({
+  const [customer, setCustomer] = useState<Partial<InitCustomer>>({
     name: "",
     contact: "",
     email: "",
@@ -65,16 +65,11 @@ const CustomerDetail: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setCustomer((prev) => ({ ...prev, [id]: value }));
-  };
-
   return (
     <DynamicForm
       title={id ? t("CustomerDetail.edit") : t("CustomerDetail.add")}
       fields={formData}
-      onChange={handleChange}
+      setState={setCustomer}
       onSubmit={handleSaveNewcustomer}
       submitLabel={t("buttons.save")}
     />
