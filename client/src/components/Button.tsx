@@ -5,7 +5,7 @@ import type { ButtonHTMLAttributes } from "react";
 
 type CTAButtonProps = {
   children: ReactNode;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "danger";
   className?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -19,6 +19,7 @@ const CTAButton = ({
   const variants = {
     primary: "bg-blue-600 hover:bg-blue-700 text-white",
     ghost: "bg-gray-800 hover:bg-gray-700 text-gray-400",
+    danger: "bg-red-600 hover:bg-red-700 text-white",
   };
   return (
     <button className={`${base} ${variants[variant]} ${className}`} {...rest}>

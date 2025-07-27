@@ -27,7 +27,8 @@ export default {
     toCompanyData: "edit company data",
     createInvoice: "Create invoice",
     toCustomers: "Customers",
-    viewDetails: "View Details",
+    edit: "View Details",
+    delete: "Delete",
   },
   commonLabels: {
     name: "Name",

@@ -8,4 +8,6 @@ export const ERROR_MESSAGES = {
   INVALID_CREDENTIALS:
     "Entweder Passwort oder Email ist falsch oder nicht vorhanden",
   DATABASE_QUERY_FAILED: "Datenbankabfrage ist gescheitert",
+  NO_CUSTOMER_FOUND_DELETE: "Kein Kunde zum Löschen gefunden",
+  NO_CUSTOMER_FOUND_UPDATE: "Kein Kunde zum updaten gefunden",
 };

@@ -17,9 +17,6 @@ const Dashboard: React.FC = () => {
         <CTAButton onClick={() => navigate("/customers")}>
           {t("buttons.toCustomers")}
         </CTAButton>
-        <CTAButton onClick={() => navigate("/add-customer")}>
-          {t("buttons.toAddCustomer")}
-        </CTAButton>
         <CTAButton onClick={() => navigate("/add-data")}>
           {t("buttons.toCompanyData")}
         </CTAButton>
