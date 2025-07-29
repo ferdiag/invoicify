@@ -1,5 +1,6 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { InferSelectModel } from "drizzle-orm";
+
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -9,6 +10,7 @@ export const users = pgTable("users", {
   city: varchar("city", { length: 100 }).default(""),
   zip: varchar("zip", { length: 20 }).default(""),
   country: varchar("country", { length: 100 }).default(""),
+  taxNumer: varchar("taxNumber", { length: 15 }).default(""),
 });
 
 export const customers = pgTable("customers", {

@@ -1,16 +1,15 @@
+// userstore.ts
 import { create } from "zustand";
+import { combine } from "zustand/middleware";
+import { states } from "./states";
 import { actions } from "./actions";
-import type { User, UserState } from "./types";
+import type { State, Actions } from "./types";
 
-export const baseStore = (
-  set: (partial: Partial<UserState>) => void,
-  get: () => UserState
-) => ({
-  token: null,
-  user: null,
-  setUser: (user: User) => set({ user }),
-  logout: () => set({ user: null, token: null }),
-  setToken: (token: string) => set({ token }),
-  ...actions(set, get),
-});
-export const useUserStore = create<UserState>(baseStore as () => UserState);
+// Wir definieren unseren Store-Typ als Schnittmenge aus State + Actions
+export type UserStore = State & Actions;
+
+export const useUserStore = create<UserStore>()(
+  combine<State, Actions>(states, (set, get) => ({
+    ...actions(set, get),
+  }))
+);

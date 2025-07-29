@@ -1,93 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
 import type { Customer } from "../store/types";
 
-type Product = {
+export type Product = {
+  id: string;
   name: string;
   quantity: number;
   price: number;
 };
 
 const CreateInvoice: React.FC = () => {
-  const { user } = useUserStore();
+  const {
+    user,
+    invoiceData,
+    handleAddProduct,
+    handleRemoveProduct,
+    handleProductChange,
+    handleVatChange,
+    handleDateChange,
+    handleCustomerChange,
+    handleCalculateTaxAndPrice,
+    handlePriceChange,
+    handleQuantityChange,
+  } = useUserStore();
   const { t } = useTranslation();
-  const [invoiceData, setInvoiceData] = useState({
-    customer: "",
-    products: [{ name: "", quantity: 1, price: 0 }],
-    vat: 19,
-    invoiceDate: new Date().toISOString().split("T")[0],
-    dueDate: (() => {
-      const d = new Date();
-      d.setDate(d.getDate() + 14);
-      return d.toISOString().split("T")[0];
-    })(),
-  });
 
-  const handleCustomerChange = (value: string) => {
-    setInvoiceData((prev) => ({ ...prev, customer: value }));
-  };
-
-  const handleProductChange = (
-    id: number,
-    field: string,
-    value: string | number
-  ) => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      products: prev.products.map((prod, i) =>
-        i === id
-          ? {
-              ...prod,
-              [field]:
-                field === "quantity" || field === "price"
-                  ? Number(value)
-                  : value,
-            }
-          : prod
-      ),
-    }));
-  };
-
-  const handleAddProduct = () => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      products: [...prev.products, { name: "", quantity: 1, price: 0 }],
-    }));
-  };
-
-  const handleRemoveProduct = (id: number) => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      products: prev.products.filter((_, i) => i !== id),
-    }));
-  };
-
-  const handleVatChange = (value: string) => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      vat: Number(value),
-    }));
-  };
-
-  const handleDateChange = (
-    field: "invoiceDate" | "dueDate",
-    value: string
-  ) => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const netAmount =
-    Math.round(
-      invoiceData.products.reduce((sum, p) => sum + p.quantity * p.price, 0) *
-        100
-    ) / 100;
-
-  const grossAmount =
-    Math.round(netAmount * (1 + invoiceData.vat / 100) * 100) / 100;
+  useEffect(() => {
+    handleCalculateTaxAndPrice();
+  }, [handleCalculateTaxAndPrice, invoiceData.products, invoiceData.vat]);
 
   return (
     <div>
@@ -126,16 +67,21 @@ const CreateInvoice: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {invoiceData.products.map((product: Product, id: number) => (
-                <tr key={id}>
+              {invoiceData.products.map((product: Product) => (
+                <tr key={product.id}>
                   <td className="px-2 py-1">
                     <input
                       type="text"
                       placeholder={t("invoice.productName")}
                       value={product.name}
-                      onChange={(e) =>
-                        handleProductChange(id, "name", e.target.value)
-                      }
+                      name="name"
+                      onChange={(e) => {
+                        handleProductChange({
+                          id: product.id,
+                          field: e.target.name,
+                          value: e.target.value,
+                        });
+                      }}
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full"
                     />
                   </td>
@@ -144,23 +90,32 @@ const CreateInvoice: React.FC = () => {
                       type="number"
                       min={1}
                       placeholder={t("invoice.quantity")}
+                      name="quantity"
                       value={product.quantity}
                       onChange={(e) =>
-                        handleProductChange(id, "quantity", e.target.value)
+                        handleQuantityChange({
+                          id: product.id,
+                          field: e.target.name,
+                          value: e.target.value,
+                        })
                       }
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-20 text-center"
                     />
                   </td>
                   <td className="px-2 py-1 text-center">
                     <input
-                      type="number"
-                      min={0}
-                      step={0.01}
-                      placeholder={t("invoice.price")}
-                      value={product.price}
-                      onChange={(e) =>
-                        handleProductChange(id, "price", e.target.value)
-                      }
+                      type="text"
+                      inputMode="decimal"
+                      name="price"
+                      defaultValue={product.price}
+                      onBlur={(e) => {
+                        const newValue = handlePriceChange({
+                          id: product.id,
+                          field: e.target.name,
+                          value: e.target.value,
+                        });
+                        e.target.value = newValue;
+                      }}
                       className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-24 text-center"
                     />
                   </td>
@@ -168,7 +123,7 @@ const CreateInvoice: React.FC = () => {
                     {invoiceData.products.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => handleRemoveProduct(id)}
+                        onClick={() => handleRemoveProduct(product.id)}
                         className="bg-red-600 text-white px-2 rounded"
                       >
                         &minus;
@@ -181,7 +136,7 @@ const CreateInvoice: React.FC = () => {
           </table>
           <button
             type="button"
-            onClick={handleAddProduct}
+            onClick={() => handleAddProduct()}
             className="bg-blue-600 text-white px-4 py-1 rounded mt-2"
           >
             {t("invoice.addProduct")}
@@ -227,13 +182,13 @@ const CreateInvoice: React.FC = () => {
         <div className="mt-4">
           <label>{t("invoice.netAmount")}</label>
           <div className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full">
-            {netAmount.toFixed(2)}
+            {invoiceData.netAmount.toFixed(2)}
           </div>
         </div>
         <div className="mt-2">
           <label>{t("invoice.grossAmount")}</label>
           <div className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full">
-            {grossAmount.toFixed(2)}
+            {invoiceData.grossAmount.toFixed(2)}
           </div>
         </div>
         <button

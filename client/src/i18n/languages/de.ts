@@ -40,6 +40,7 @@ export default {
     city: "Stadt",
     zip: "PLZ",
     country: "Land",
+    taxNumber: "Steuernummer",
   },
   addCustomer: {
     addSuccess: "Kunde erfolgreich hinzugefügt",

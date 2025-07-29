@@ -12,8 +12,9 @@ export type User = {
   zip: string;
   country: string;
   customers: Customer[];
+  taxNumber: string;
 };
-export type InitCustomer = {
+export type DefaultCustomer = {
   name: string;
   contact: string;
   email: string;
@@ -34,10 +35,33 @@ export type Customer = {
   zip: string;
   country: string;
 };
-export type UserState = {
+export type ProductChange = {
+  id: string;
+  field: string;
+  value: string;
+};
+export type InvoiceData = {
+  customer: string;
+  products: { name: string; quantity: number; price: number; id: string }[];
+  vat: number;
+  invoiceDate: string;
+  dueDate: string;
+  netAmount: number;
+  grossAmount: number;
+};
+export type State = {
   token: string | null;
   user: User | null;
-  setUser: (user: User) => void;
+  invoiceData: InvoiceData;
+};
+export type UpdateProducts = {
+  id: string;
+  field: string;
+  value: string | number;
+  set: (partial: Partial<State>) => void;
+  invoice: InvoiceData;
+};
+export type Actions = {
   logout: () => void;
   setToken: (token: string) => void;
   deleteCustomer: (id: string) => void;
@@ -60,4 +84,16 @@ export type UserState = {
     navigate: NavigateFunction,
     t: TFunction<"translation", undefined>
   ) => void;
+  updateCustomerSuccess: (data: Customer) => void;
+  addCustomerSuccess: (data: Customer) => void;
+  handleAddProduct: () => void;
+  handleRemoveProduct: (id: string) => void;
+  handleVatChange: (value: string) => void;
+  handleDateChange: (field: "invoiceDate" | "dueDate", value: string) => void;
+
+  handleProductChange: ({ id, field, value }: ProductChange) => void;
+  handleCustomerChange: (value: string) => void;
+  handleCalculateTaxAndPrice: () => void;
+  handlePriceChange: ({ id, field, value }: ProductChange) => string;
+  handleQuantityChange: ({ id, field, value }: ProductChange) => void;
 };

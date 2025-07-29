@@ -3,47 +3,51 @@ import { api } from "../lib/api";
 import { useUserStore } from "../store/userStore";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { createFormData } from "../factories/createForms";
 import DynamicForm from "../components/DynamicForm";
-import type { Customer, InitCustomer } from "../store/types";
+import type { Customer, DefaultCustomer } from "../store/types";
 
+const keys: (keyof Customer)[] = [
+  "name",
+  "email",
+  "phone",
+  "contact",
+  "address",
+  "zip",
+  "city",
+  "country",
+];
+const defaultCustomer: DefaultCustomer = {
+  name: "",
+  contact: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  zip: "",
+  country: "",
+};
 const CustomerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user, setUser } = useUserStore();
-
-  const [customer, setCustomer] = useState<Partial<InitCustomer>>({
-    name: "",
-    contact: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    zip: "",
-    country: "",
-  });
-  useEffect(() => {
-    const payload: Customer | undefined = user?.customers.find(
-      (cust) => cust.id === id
-    );
-    if (payload) {
-      const { ...updatedCustomer } = payload;
-      setCustomer(updatedCustomer);
-    }
-  }, [user?.customers, id, setCustomer]);
-  const { t } = useTranslation();
+  const { user, updateCustomerSuccess, addCustomerSuccess } = useUserStore();
   const navigate = useNavigate();
 
-  const keys: (keyof Customer)[] = [
-    "name",
-    "email",
-    "phone",
-    "contact",
-    "address",
-    "zip",
-    "city",
-    "country",
-  ];
+  const [customer, setCustomer] =
+    useState<Partial<DefaultCustomer>>(defaultCustomer);
+
+  useEffect(() => {
+    if (id) {
+      const targetCustomer: Customer | undefined = user?.customers.find(
+        (cust) => cust.id === id
+      );
+      if (targetCustomer) {
+        setCustomer({ ...targetCustomer });
+      } else {
+        navigate("/customers");
+      }
+    }
+  }, [user?.customers, id, setCustomer, navigate]);
+  const { t } = useTranslation();
 
   const formData = createFormData<Customer>(customer, t, keys);
   const handleSaveNewCustomer = async () => {
@@ -57,16 +61,9 @@ const CustomerDetail: React.FC = () => {
 
     if ([200, 201].includes(response.status)) {
       if (id) {
-        setUser({
-          ...user,
-          customers: user.customers.map((cust) =>
-            cust.id === id ? { ...cust, ...response.data } : cust
-          ),
-        });
-        toast.success(t("CustomerDetail.edit"));
+        updateCustomerSuccess(response.data);
       } else {
-        setUser({ ...user, customers: [...user.customers, response.data] });
-        toast.success(t("addCustomer.addSuccess"));
+        addCustomerSuccess(response.data);
       }
       navigate("/customers");
     }

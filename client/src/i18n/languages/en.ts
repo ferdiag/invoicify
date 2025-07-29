@@ -39,6 +39,7 @@ export default {
     city: "City",
     zip: "ZIP",
     country: "Country",
+    taxNumber: "Tax number",
   },
   addCustomer: {
     addSuccess: "Customer successfully added",

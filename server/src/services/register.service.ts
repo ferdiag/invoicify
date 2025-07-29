@@ -19,6 +19,7 @@ export const handleRegister = async (data: Register) => {
   try {
     await db.insert(users).values(newUser);
   } catch (error: any) {
+    console.log("ich bin schon vergeben");
     throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
   }
 

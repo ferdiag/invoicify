@@ -36,6 +36,13 @@
       "when": 1753623803308,
       "tag": "0004_silent_fabian_cortez",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1753626651136,
+      "tag": "0005_whole_namora",
+      "breakpoints": true
     }
   ]
 }

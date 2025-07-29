@@ -25,6 +25,7 @@ const EditCompanyData: React.FC = () => {
     "zip",
     "city",
     "country",
+    "taxNumber",
   ];
 
   const formData = createFormData<User>(editedUser, t, keys);
