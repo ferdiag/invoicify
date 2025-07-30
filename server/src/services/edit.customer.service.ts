@@ -9,14 +9,20 @@ export const handleEditCustomer = async (
   id: string,
   body: Partial<CustomerType>
 ) => {
-  const [updatedCustomer] = await db
-    .update(customers)
-    .set(body)
-    .where(eq(customers.id, id))
-    .returning();
+  try {
+    const [updatedCustomer] = await db
+      .update(customers)
+      .set(body)
+      .where(eq(customers.id, id))
+      .returning();
 
-  if (!updatedCustomer) {
-    throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE);
+    if (!updatedCustomer) {
+      throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE);
+    }
+    return updatedCustomer;
+  } catch {
+    throw createHttpError.InternalServerError(
+      ERROR_MESSAGES.DATABASE_QUERY_FAILED
+    );
   }
-  return updatedCustomer;
 };

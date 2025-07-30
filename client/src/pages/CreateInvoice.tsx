@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
 import type { Customer } from "../store/types";
+import { api } from "../lib/api";
+// import { api } from "../lib/api";
 
 export type Product = {
   id: string;
@@ -29,23 +31,27 @@ const CreateInvoice: React.FC = () => {
   useEffect(() => {
     handleCalculateTaxAndPrice();
   }, [handleCalculateTaxAndPrice, invoiceData.products, invoiceData.vat]);
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const response = await api.post("/api/invoice", { ...invoiceData });
+    console.log("Invoice created:", response.data);
+  };
   return (
     <div>
       <h1>{t("invoice.createTitle")}</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="customer" className="block text-sm text-gray-300 mb-1">
           {t("invoice.selectCustomer")}
         </label>
         <select
           id="customer"
-          value={invoiceData.customer}
+          value={invoiceData.customerId}
           onChange={(e) => handleCustomerChange(e.target.value)}
           className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600"
         >
           <option value="">{t("invoice.selectCustomerPlaceholder")}</option>
-          {user?.customers.map((customer: Customer, id: number) => (
-            <option key={id} value={customer.name}>
+          {user?.customers.map((customer: Customer) => (
+            <option key={customer.id} value={customer.id}>
               {customer.name} ({customer.contact})
             </option>
           ))}

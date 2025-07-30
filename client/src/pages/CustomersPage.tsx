@@ -8,6 +8,7 @@ import { api } from "../lib/api";
 const CustomersPage: React.FC = () => {
   const { user, deleteCustomer } = useUserStore();
   const navigate = useNavigate();
+
   const handleDeleteCustomer = async (id: string) => {
     const response = await api.delete(`api/customer/${id}`);
     if (response.status === 200) {

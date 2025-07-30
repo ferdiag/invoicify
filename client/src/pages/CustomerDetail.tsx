@@ -50,6 +50,7 @@ const CustomerDetail: React.FC = () => {
   const { t } = useTranslation();
 
   const formData = createFormData<Customer>(customer, t, keys);
+
   const handleSaveNewCustomer = async () => {
     if (!user) return;
     const payload = { ...customer, userId: user.id };

@@ -5,13 +5,19 @@ import createHttpError from "http-errors";
 import { ERROR_MESSAGES } from "../constants/errorMessages";
 
 export const handleDeleteCustomer = async (id: string) => {
-  const [deleted]: { id: string }[] = await db
-    .delete(customers)
-    .where(eq(customers.id, id))
-    .returning({ id: customers.id });
+  try {
+    const [deleted]: { id: string }[] = await db
+      .delete(customers)
+      .where(eq(customers.id, id))
+      .returning({ id: customers.id });
 
-  if (!deleted) {
-    throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_DELETE);
+    if (!deleted) {
+      throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_DELETE);
+    }
+    return { id: deleted.id };
+  } catch (error) {
+    throw createHttpError.InternalServerError(
+      ERROR_MESSAGES.DATABASE_QUERY_FAILED
+    );
   }
-  return { id: deleted.id };
 };

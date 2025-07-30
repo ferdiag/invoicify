@@ -142,9 +142,9 @@ export const actions = (
     const updated = Number(parseInt(value, 10));
     updateProducts({ id, field, set, value: updated, invoice: invoiceData });
   },
-  handleCustomerChange: (value: string) => {
+  handleCustomerChange: (value) => {
     const { invoiceData } = get();
-    set({ invoiceData: { ...invoiceData, customer: value } });
+    set({ invoiceData: { ...invoiceData, customerId: value } });
   },
   handleCalculateTaxAndPrice: () => {
     const { invoiceData } = get();

@@ -31,14 +31,11 @@ const EditCompanyData: React.FC = () => {
   const formData = createFormData<User>(editedUser, t, keys);
 
   const handleUpdateCompanyData = async () => {
-    if (editedUser) {
-      const response = await api.patch(`/api/user/${user!.id}`, editedUser);
-      console.log("Response from API:", response);
-      if ([200, 201].includes(response.status)) {
-        editCompanyDataSuccess(editedUser, navigate, t);
-      } else {
-        handleApiError(response, t);
-      }
+    const response = await api.patch(`/api/user/${user!.id}`, editedUser);
+    if ([200, 201].includes(response.status)) {
+      editCompanyDataSuccess(editedUser, navigate, t);
+    } else {
+      handleApiError(response, t);
     }
   };
   return (

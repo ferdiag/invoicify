@@ -1,7 +1,9 @@
-import { InferInsertModel } from "drizzle-orm";
-import { customers, users } from "../db/schema";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { customers, invoices, users } from "../db/schema";
 
 export type UserInsertType = InferInsertModel<typeof users>;
 export type UserSelectType = InferInsertModel<typeof users>;
 
 export type CustomerType = InferInsertModel<typeof customers>;
+export type UserType = InferSelectModel<typeof users>;
+export type InvoiceType = InferInsertModel<typeof invoices>;

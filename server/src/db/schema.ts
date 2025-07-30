@@ -1,5 +1,11 @@
-import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
-import { InferSelectModel } from "drizzle-orm";
+import {
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -27,4 +33,17 @@ export const customers = pgTable("customers", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
-export type UserType = InferSelectModel<typeof users>;
+export const invoices = pgTable("invoices", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  customerId: uuid("customer_Id")
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  invoiceDate: varchar("invoice_date").notNull(),
+  dueDate: varchar("due_date").notNull(),
+
+  vat: integer("vat").notNull(),
+  netAmount: numeric("net_amount", { precision: 10, scale: 2 }).notNull(),
+  grossAmount: numeric("gross_amount", { precision: 10, scale: 2 }).notNull(),
+
+  products: jsonb("products").notNull(), // Array als JSON speichern
+});

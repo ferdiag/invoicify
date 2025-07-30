@@ -41,7 +41,7 @@ export type ProductChange = {
   value: string;
 };
 export type InvoiceData = {
-  customer: string;
+  customerId: string;
   products: { name: string; quantity: number; price: number; id: string }[];
   vat: number;
   invoiceDate: string;

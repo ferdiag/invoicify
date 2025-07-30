@@ -3,12 +3,12 @@ import { handleRegister } from "../services/register.service";
 import { Register } from "../types/props.types";
 
 import { handleLogin } from "../services/login.service";
-import { handleAddCustomer } from "../services/new.customer.service";
-import { CustomerType } from "../types/database.type";
+import { handleAddCustomer } from "../services/add.customer.service";
+import { CustomerType, InvoiceType, UserType } from "../types/database.type";
 import { handleEditCustomer } from "../services/edit.customer.service";
 import { handleDeleteCustomer } from "../services/delete.customer";
 import { handleEditCompany } from "../services/edit.company";
-import { UserType } from "../db/schema";
+import { handleAddInvoice } from "../services/add.invoice.service";
 
 export const routes = async (fastify: FastifyInstance) => {
   fastify.post("/register", async (req, res) => {
@@ -51,5 +51,9 @@ export const routes = async (fastify: FastifyInstance) => {
 
     const response = await handleEditCompany(id, body);
     return res.status(200).send(response);
+  });
+  fastify.post("/invoice", async (req, res) => {
+    const response = await handleAddInvoice(req.body as InvoiceType);
+    return res.status(201).send(response);
   });
 };
