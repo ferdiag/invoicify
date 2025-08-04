@@ -1,16 +1,8 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
-import type { Customer } from "../store/types";
+import type { Customer, Product } from "../store/types";
 import { api } from "../lib/api";
-// import { api } from "../lib/api";
-
-export type Product = {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-};
 
 const CreateInvoice: React.FC = () => {
   const {
@@ -33,7 +25,14 @@ const CreateInvoice: React.FC = () => {
   }, [handleCalculateTaxAndPrice, invoiceData.products, invoiceData.vat]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await api.post("/api/invoice", { ...invoiceData });
+    const customerName = user?.customers.find(
+      (cust: Customer) => cust.id === invoiceData.customerId
+    )?.name;
+    const response = await api.post("/api/invoice", {
+      ...invoiceData,
+      userId: user?.id,
+      name: customerName,
+    });
     console.log("Invoice created:", response.data);
   };
   return (

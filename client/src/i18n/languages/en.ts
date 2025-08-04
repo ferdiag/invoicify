@@ -20,6 +20,7 @@ export default {
     edit: "edit customer ",
   },
   buttons: {
+    toInvoices: "Invoices",
     register: "Register",
     login: "Login",
     save: "Save",
@@ -66,5 +67,11 @@ export default {
     netAmount: "Net amount",
     grossAmount: "Gross amount (incl. VAT)",
     create: "Create Invoice",
+  },
+  displayInvoice: {
+    noInvoices: "No invoice found",
+    invoiceDate: "Date",
+    name: "Client",
+    grossAmount: "GrossAmount",
   },
 };

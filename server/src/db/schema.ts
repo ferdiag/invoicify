@@ -35,15 +35,17 @@ export const customers = pgTable("customers", {
 });
 export const invoices = pgTable("invoices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  customerId: uuid("customer_Id")
+  customerId: uuid("customer_id")
     .notNull()
     .references(() => customers.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  userId: uuid("user_Id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
   invoiceDate: varchar("invoice_date").notNull(),
   dueDate: varchar("due_date").notNull(),
-
   vat: integer("vat").notNull(),
   netAmount: numeric("net_amount", { precision: 10, scale: 2 }).notNull(),
   grossAmount: numeric("gross_amount", { precision: 10, scale: 2 }).notNull(),
-
   products: jsonb("products").notNull(), // Array als JSON speichern
 });

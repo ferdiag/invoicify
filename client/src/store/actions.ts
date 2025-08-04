@@ -1,9 +1,14 @@
 // actions.ts
 import { toast } from "react-toastify";
 import axios from "axios";
-import type { State, Actions, Customer, UpdateProducts } from "./types";
+import type {
+  State,
+  Actions,
+  Customer,
+  UpdateProducts,
+  Product,
+} from "./types";
 import { t } from "i18next";
-import type { Product } from "../pages/CreateInvoice";
 
 export const actions = (
   set: (partial: Partial<State>) => void,
@@ -27,6 +32,7 @@ export const actions = (
   loginSuccess: (data, message, navigate) => {
     toast.success(message, { position: "bottom-center" });
     set({ user: data.user, token: data.token });
+    console.log(data);
     navigate("/dashboard");
   },
 

@@ -57,6 +57,27 @@
       "when": 1753870187061,
       "tag": "0007_bitter_ozymandias",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1754297385842,
+      "tag": "0008_lucky_the_fallen",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1754299098732,
+      "tag": "0009_strange_amphibian",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1754301188090,
+      "tag": "0010_quiet_korg",
+      "breakpoints": true
     }
   ]
 }

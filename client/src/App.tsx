@@ -9,11 +9,16 @@ import AddCompanyData from "./pages/EditCompanyData";
 import CreateInvoice from "./pages/CreateInvoice";
 import CustomersPage from "./pages/CustomersPage";
 import CustomerDetail from "./pages/CustomerDetail";
+import Invoices from "./pages/Invoices";
+import InvoiceDetail from "./pages/InvoiceDetail";
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/customer/:id", element: <CustomerDetail /> },
+  { path: "/invoices/:id", element: <InvoiceDetail /> },
+
   { path: "/add-customer", element: <CustomerDetail /> },
+  { path: "/invoices", element: <Invoices /> },
 
   { path: "/add-data", element: <AddCompanyData /> },
   {

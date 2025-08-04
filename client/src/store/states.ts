@@ -2,7 +2,7 @@ export const states = {
   token: null,
   user: null,
   invoiceData: {
-    customer: "",
+    customerId: "",
     products: [{ name: "", quantity: 1, price: 0, id: crypto.randomUUID() }],
     vat: 19,
     invoiceDate: new Date().toISOString().split("T")[0],

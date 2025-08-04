@@ -21,6 +21,7 @@ export default {
     addSuccess: "Änderungen erfolgreich gespeichert",
   },
   buttons: {
+    toInvoices: "Rechnungen",
     register: "Registrieren",
     login: "Anmelden",
     save: "Speichern",
@@ -67,5 +68,11 @@ export default {
     netAmount: "Nettobetrag",
     grossAmount: "Bruttobetrag (inkl. MwSt.)",
     create: "Rechnung erstellen",
+  },
+  displayInvoice: {
+    noInvoices: "Keine Rechnungen gefunden.",
+    invoiceDate: "Datum",
+    name: "Kunde",
+    grossAmount: "Bruttobetrag",
   },
 };

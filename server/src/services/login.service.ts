@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/client";
-import { customers, users } from "../db/schema";
+import { customers, invoices, users } from "../db/schema";
 import { UserInsertType, UserSelectType } from "../types/database.type";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -41,12 +41,17 @@ export const handleLogin = async (data: UserInsertType) => {
     .where(eq(customers.userId, user.id!));
 
   const { password: _, ...userdata } = user;
-
+  const targetInvoices = await db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.userId, user.id!));
+  console.log("rechnungen", targetInvoices);
   return {
     token,
     user: {
       ...userdata,
       customers: targetCustomer,
+      invoices: targetInvoices,
     },
   };
 };

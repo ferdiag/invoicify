@@ -20,8 +20,8 @@ const Dashboard: React.FC = () => {
         <CTAButton onClick={() => navigate("/add-data")}>
           {t("buttons.toCompanyData")}
         </CTAButton>
-        <CTAButton onClick={() => navigate("/create-invoice")}>
-          {t("buttons.createInvoice")}
+        <CTAButton onClick={() => navigate("/invoices")}>
+          {t("buttons.toInvoices")}
         </CTAButton>
       </div>
     </div>
