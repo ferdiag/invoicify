@@ -39,7 +39,7 @@ Frontend:
 
 Backend:
 
-    Node.js, Express
+    fastify, Express
 
     Drizzle ORM
 
