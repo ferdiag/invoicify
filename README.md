@@ -1,111 +1,151 @@
-# Invoicify
+Invoicify
 
-**Invoicify** is a modern web application for freelancers, self-employed professionals, and small businesses to create, manage, and organize professional invoices with ease.
+Invoicify ist eine moderne Webanwendung für Freelancer, Selbstständige und kleine Unternehmen, um professionelle Rechnungen einfach zu erstellen, zu verwalten und zu organisieren.
+✨ Funktionen
 
-## Features
+    Benutzer-Authentifizierung (Registrieren / Login)
 
-- User authentication (register/login)
-- Multilingual support (German/English)
-- Dashboard with quick actions
-- Customer management (add/edit customers)
-- Company data management
-- Invoice creation with:
-  - Dynamic product list
-  - Automatic calculation of net/gross amounts
-  - Due date management
-- Responsive and modern UI (Tailwind CSS)
-- Toast notifications for user feedback
+    Mehrsprachigkeit (Deutsch / Englisch)
 
-## Tech Stack
+    Übersichtliches Dashboard mit Schnellzugriffen
 
-- **Frontend:** React, TypeScript, React Router, React Hook Form, i18next, Tailwind CSS, React Toastify
-- **Backend:** Node.js, Express, Drizzle ORM, PostgreSQL
+    Kundenverwaltung (Hinzufügen, Bearbeiten, Löschen)
 
-## Getting Started
+    Firmendatenverwaltung
 
-### Prerequisites
+    Rechnungserstellung mit:
 
-- Node.js (v18+ recommended)
-- npm or yarn
-- PostgreSQL database
+        Dynamischer Produktliste
 
-### Setup
+        Automatischer Netto-/Bruttoberechnung
 
-#### 1. Clone the repository
+        Fälligkeitsdatum
 
-```bash
-git clone https://github.com/yourusername/invoicify.git
+    Responsive, modernes UI (Tailwind CSS)
+
+    Toast-Benachrichtigungen für Benutzerfeedback
+
+🛠️ Tech-Stack
+
+Frontend:
+
+    React, TypeScript
+
+    React Router, React Hook Form
+
+    i18next (Mehrsprachigkeit)
+
+    Tailwind CSS, React Toastify
+
+Backend:
+
+    Node.js, Express
+
+    Drizzle ORM
+
+    PostgreSQL
+
+🚀 Erste Schritte
+Voraussetzungen
+
+    Node.js (v18 oder neuer empfohlen)
+
+    npm oder yarn
+
+    PostgreSQL-Datenbank
+
+Installation
+
+1. Repository klonen
+
+git clone https://github.com/ferdiag/invoicify.git
 cd invoicify
-```
 
-#### 2. Install dependencies
+2. Abhängigkeiten installieren
 
-```bash
 cd client
 npm install
 cd ../server
 npm install
-```
 
-#### 3. Configure environment variables
+3. Umgebungsvariablen konfigurieren
 
-- Copy `.env.example` to `.env` in both `client` and `server` folders and adjust the settings (e.g. database connection, JWT secret, etc.).
+Kopiere die Datei .env.example in beiden Ordnern client und server nach .env und passe die Werte an (z. B. Datenbankverbindung, JWT-Secret). 4. Datenbank einrichten
 
-#### 4. Database setup
+Führe Migrationen aus oder erstelle das Schema wie in server/src/db/schema.ts beschrieben. 5. Entwicklungsserver starten
 
-- Run migrations or set up your database schema as needed (see `server/src/db/schema.ts`).
+Backend:
 
-#### 5. Start the development servers
-
-**Backend:**
-
-```bash
 cd server
 npm run dev
-```
 
-**Frontend:**
+Frontend:
 
-```bash
 cd client
 npm run dev
-```
 
-- The frontend will typically run on [http://localhost:5173](http://localhost:5173)
-- The backend will typically run on [http://localhost:3000](http://localhost:3000)
+Standardmäßig:
 
-## Usage
+    Frontend: http://localhost:5173
 
-1. Register a new account or log in.
-2. Add your company data and customers.
-3. Create invoices by selecting a customer, adding products, setting VAT and due date.
-4. Download or send invoices as needed (feature may require extension).
+    Backend: http://localhost:3000
 
-## Folder Structure
+📖 Nutzung
 
-```
+    Registriere einen neuen Account oder melde dich an.
+
+    Hinterlege deine Firmendaten und Kunden.
+
+    Erstelle Rechnungen, wähle Kunden aus, füge Produkte hinzu, setze MwSt. und Fälligkeitsdatum.
+
+    Lade Rechnungen herunter oder versende sie direkt (zukünftige Funktion).
+
+📂 Projektstruktur
+
 invoicify/
-  client/      # React frontend
-    src/
-      components/
-      pages/
-      i18n/
-      factories/
-      ...
-  server/      # Node.js backend
-    src/
-      db/
-      routes/
-      ...
-```
+client/ # React-Frontend
+src/
+components/
+pages/
+i18n/
+factories/
+...
+server/ # Node.js-Backend
+src/
+db/
+routes/
+...
 
-## Customization
+🌍 Anpassung
 
-- To add more languages, extend the files in `client/src/i18n/languages/`.
-- To add more invoice fields, adjust the form factories and backend schema.
+    Neue Sprachen: Dateien in client/src/i18n/languages/ erweitern.
 
-## License
+    Zusätzliche Rechnungsfelder: Formular-Logik und Datenbankschema entsprechend anpassen.
+
+🐳 Optional: Docker-Setup für PostgreSQL
+
+Falls du PostgreSQL nicht lokal installieren möchtest, kannst du die Datenbank auch mit Docker starten:
+
+services:
+db:
+image: postgres:15
+restart: always
+ports: - "5433:5432"
+environment:
+POSTGRES_USER: ferhat
+POSTGRES_PASSWORD: supersecret
+POSTGRES_DB: invoicify
+volumes: - postgres_data:/var/lib/postgresql/data
+
+volumes:
+postgres_data:
+
+Starte die Datenbank mit:
+
+docker-compose up -d
+
+    Hinweis: Backend & Frontend müssen weiterhin separat gestartet werden.
+
+📜 Lizenz
 
 MIT
-
----
