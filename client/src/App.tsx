@@ -1,16 +1,19 @@
-import Layout from "./components/Layout";
+import { lazy } from "react";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Auth from "./pages/Auth";
-import Home from "./pages/Home";
 import { ToastContainer } from "react-toastify";
-import Dashboard from "./pages/Dashboard";
+
+import Layout from "./components/Layout";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
-import AddCompanyData from "./pages/EditCompanyData";
-import CreateInvoice from "./pages/CreateInvoice";
-import CustomersPage from "./pages/CustomersPage";
-import CustomerDetail from "./pages/CustomerDetail";
-import Invoices from "./pages/Invoices";
-import InvoiceDetail from "./pages/InvoiceDetail";
+
+const Auth = lazy(() => import("./pages/Auth"));
+const Home = lazy(() => import("./pages/Home"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AddCompanyData = lazy(() => import("./pages/EditCompanyData"));
+const CreateInvoice = lazy(() => import("./pages/CreateInvoice"));
+const CustomersPage = lazy(() => import("./pages/CustomersPage"));
+const CustomerDetail = lazy(() => import("./pages/CustomerDetail"));
+const Invoices = lazy(() => import("./pages/Invoices"));
+const InvoiceDetail = lazy(() => import("./pages/InvoiceDetail"));
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
