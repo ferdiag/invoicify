@@ -8,7 +8,7 @@ Benutzer-Accounts (Registrierung & Login)
 
 Mehrsprachigkeit (DE/EN)
 
-Übersichtlichs Dashboard mit Schnellzugriffen
+Übersichtliches Dashboard mit Schnellzugriffen
 
 Kundenverwaltung (Anlegen, Bearbeiten, Löschen)
 
