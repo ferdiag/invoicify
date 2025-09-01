@@ -1,5 +1,5 @@
 import { useUserStore } from "../store/userStore";
-import CTAButton from "../components/Button";
+import CTAButton from "../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type React from "react";

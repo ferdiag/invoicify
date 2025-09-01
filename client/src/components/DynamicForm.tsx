@@ -1,5 +1,5 @@
 import React from "react";
-import CTAButton from "./Button";
+import CTAButton from "./Button/Button";
 import Input from "./Input";
 
 type Field = {

@@ -1,32 +1,36 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import dotenv from "dotenv";
+import {
+  ZodTypeProvider,
+  validatorCompiler,
+  serializerCompiler,
+} from "fastify-type-provider-zod";
 import { routes } from "./routes";
 import { registerErrorHandler } from "./middleware/registerErrorHandler";
-import dotenv from "dotenv";
 
-const fastify = Fastify({
-  logger: true,
-});
 dotenv.config();
+
+const app = Fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
+
 async function main() {
-  await fastify.register(cors, {
+  await app.register(cors, {
     origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   });
-  await fastify.register(routes, { prefix: "api" });
-  await registerErrorHandler(fastify);
 
-  await fastify.listen({ port: 3000 }, (err, add) => {
-    if (err) {
-      fastify.log.error(err);
-      process.exit(1);
-    }
-    fastify.log.info(`Server läuft auf ${add}`);
-  });
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
+  await app.register(routes, { prefix: "/api" });
+  await registerErrorHandler(app);
+
+  await app.listen({ port: 3000, host: "0.0.0.0" });
+  app.log.info("Server läuft auf http://localhost:3000");
 }
 
 main().catch((err) => {
-  fastify.log.error(err);
+  app.log.error(err);
   process.exit(1);
 });

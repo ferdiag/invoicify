@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import CTAButton from "../components/Button";
+import CTAButton from "../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import type React from "react";
 

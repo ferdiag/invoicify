@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import {
   integer,
   jsonb,
@@ -6,6 +7,13 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
+export type ProductItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -16,7 +24,7 @@ export const users = pgTable("users", {
   city: varchar("city", { length: 100 }).default(""),
   zip: varchar("zip", { length: 20 }).default(""),
   country: varchar("country", { length: 100 }).default(""),
-  taxNumer: varchar("taxNumber", { length: 15 }).default(""),
+  taxNumber: varchar("taxNumber", { length: 15 }).default(""),
 });
 
 export const customers = pgTable("customers", {
@@ -33,6 +41,7 @@ export const customers = pgTable("customers", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
+
 export const invoices = pgTable("invoices", {
   id: uuid("id").primaryKey().defaultRandom(),
   customerId: uuid("customer_id")
@@ -47,5 +56,5 @@ export const invoices = pgTable("invoices", {
   vat: integer("vat").notNull(),
   netAmount: numeric("net_amount", { precision: 10, scale: 2 }).notNull(),
   grossAmount: numeric("gross_amount", { precision: 10, scale: 2 }).notNull(),
-  products: jsonb("products").notNull(), // Array als JSON speichern
+  products: jsonb("products").$type<ProductItem[]>().notNull(),
 });

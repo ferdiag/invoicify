@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import Navbar from "./Navbar";
-import CTAButton from "./Button";
+import CTAButton from "./Button/Button";
 import { useUserStore } from "../store/userStore";
 
 export default function Layout() {

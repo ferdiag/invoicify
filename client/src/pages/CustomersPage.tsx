@@ -1,6 +1,6 @@
 import React from "react";
 import { useUserStore } from "../store/userStore";
-import CTAButton from "../components/Button";
+import CTAButton from "../components/Button/Button";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";

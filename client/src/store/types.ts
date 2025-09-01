@@ -1,5 +1,6 @@
 import type { TFunction } from "i18next";
 import type { NavigateFunction } from "react-router-dom";
+
 export type Product = {
   id: string;
   name: string;
