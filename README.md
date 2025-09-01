@@ -1,151 +1,178 @@
 Invoicify
 
-Invoicify ist eine moderne Webanwendung für Freelancer, Selbstständige und kleine Unternehmen, um professionelle Rechnungen einfach zu erstellen, zu verwalten und zu organisieren.
-✨ Funktionen
+Ein schlankes Rechnungs-Tool für Freelancer, Selbstständige und kleine Unternehmen: Rechnungen professionell erstellen, verwalten und den Überblick behalten – ohne Ballast.
 
-    Benutzer-Authentifizierung (Registrieren / Login)
+✨ Features
 
-    Mehrsprachigkeit (Deutsch / Englisch)
+Benutzer-Accounts (Registrierung & Login)
 
-    Übersichtliches Dashboard mit Schnellzugriffen
+Mehrsprachigkeit (DE/EN)
 
-    Kundenverwaltung (Hinzufügen, Bearbeiten, Löschen)
+Übersichtliches Dashboard mit Schnellzugriffen
 
-    Firmendatenverwaltung
+Kundenverwaltung (Anlegen, Bearbeiten, Löschen)
 
-    Rechnungserstellung mit:
+Firmenstammdaten
 
-        Dynamischer Produktliste
+Rechnungserstellung mit
 
-        Automatischer Netto-/Bruttoberechnung
+dynamischer Positionenliste
 
-        Fälligkeitsdatum
+Netto/Brutto-Berechnung
 
-    Responsive, modernes UI (Tailwind CSS)
+Fälligkeitsdatum
 
-    Toast-Benachrichtigungen für Benutzerfeedback
+Responsives, modernes UI (Tailwind)
 
-🛠️ Tech-Stack
+Toast-Benachrichtigungen für klares Feedback
 
-Frontend:
+Tech-Stack
+Frontend: React + TypeScript, React Router, React Hook Form, i18next, Tailwind, React-Toastify
+Backend: Fastify (Express-Kompatibilität für Middleware wo sinnvoll), Drizzle ORM, PostgreSQL
+Dev: Vite (FE), Node/NPM Scripts (BE) – Standardports: Frontend :5173, Backend :3000. 
 
-    React, TypeScript
 
-    React Router, React Hook Form
-
-    i18next (Mehrsprachigkeit)
-
-    Tailwind CSS, React Toastify
-
-Backend:
-
-    fastify, Express
-
-    Drizzle ORM
-
-    PostgreSQL
-
-🚀 Erste Schritte
+🚀 Getting Started
 Voraussetzungen
 
-    Node.js (v18 oder neuer empfohlen)
+Node.js ≥ 18
 
-    npm oder yarn
+npm oder yarn
 
-    PostgreSQL-Datenbank
+PostgreSQL (lokal oder via Docker)
 
 Installation
 
-1. Repository klonen
-
+# 1) Repo klonen
 git clone https://github.com/ferdiag/invoicify.git
 cd invoicify
 
-2. Abhängigkeiten installieren
+# 2) Abhängigkeiten installieren
+cd client && npm install
+cd ../server && npm install
 
-cd client
-npm install
-cd ../server
-npm install
+Umgebungsvariablen
 
-3. Umgebungsvariablen konfigurieren
+Erstelle in client und server jeweils eine .env (ausgehend von .env.example, falls vorhanden) und erstelle sinnvolle Defaults:
 
-Kopiere die Datei .env.example in beiden Ordnern client und server nach .env und passe die Werte an (z. B. Datenbankverbindung, JWT-Secret). 4. Datenbank einrichten
+/server/.env
 
-Führe Migrationen aus oder erstelle das Schema wie in server/src/db/schema.ts beschrieben. 5. Entwicklungsserver starten
+DATABASE_URL=postgres://USER:PASS@localhost:5433/invoicify
+JWT_SECRET=...
+PORT=3000
+NODE_ENV=development
 
-Backend:
+/client/.env
 
+VITE_API_URL=http://localhost:3000
+VITE_DEFAULT_LOCALE=de
+
+    Passe DATABASE_URL an, falls du Postgres lokal ohne Docker nutzt (Port dann meist 5432).
+
+Datenbank & Schema
+
+    Drizzle ORM definiert das Schema im Backend (z. B. unter server/src/db/schema.ts).
+
+    Führe deine Migrations/Init-Steps gemäß Projektkonfiguration aus (z. B. Drizzle-CLI oder eigener Setup-Script).
+    GitHub
+
+Development starten
+
+# Backend
 cd server
 npm run dev
 
-Frontend:
-
+# Frontend (neues Terminal)
 cd client
 npm run dev
 
-Standardmäßig:
-
     Frontend: http://localhost:5173
 
-    Backend: http://localhost:3000
+Backend: http://localhost:3000
 
-📖 Nutzung
+    GitHub
 
-    Registriere einen neuen Account oder melde dich an.
+🐘 PostgreSQL via Docker (optional)
 
-    Hinterlege deine Firmendaten und Kunden.
-
-    Erstelle Rechnungen, wähle Kunden aus, füge Produkte hinzu, setze MwSt. und Fälligkeitsdatum.
-
-    Lade Rechnungen herunter oder versende sie direkt (zukünftige Funktion).
-
-📂 Projektstruktur
-
-invoicify/
-client/ # React-Frontend
-src/
-components/
-pages/
-i18n/
-factories/
-...
-server/ # Node.js-Backend
-src/
-db/
-routes/
-...
-
-🌍 Anpassung
-
-    Neue Sprachen: Dateien in client/src/i18n/languages/ erweitern.
-
-    Zusätzliche Rechnungsfelder: Formular-Logik und Datenbankschema entsprechend anpassen.
-
-🐳 Optional: Docker-Setup für PostgreSQL
-
-Falls du PostgreSQL nicht lokal installieren möchtest, kannst du die Datenbank auch mit Docker starten:
-
-services:
-db:
-image: postgres:15
-restart: always
-ports: - "5433:5432"
-environment:
-POSTGRES_USER: ferhat
-POSTGRES_PASSWORD: supersecret
-POSTGRES_DB: invoicify
-volumes: - postgres_data:/var/lib/postgresql/data
-
-volumes:
-postgres_data:
-
-Starte die Datenbank mit:
+Es liegt ein docker-compose.yml bei, mit dem du eine lokale Postgres-Instanz starten kannst (Port-Mapping z. B. 5433:5432).
 
 docker-compose up -d
 
-    Hinweis: Backend & Frontend müssen weiterhin separat gestartet werden.
+    Danach verbindet sich das Backend über DATABASE_URL mit localhost:5433.
+    GitHub
 
-📜 Lizenz
+🧭 Projektstruktur (Kurzüberblick)
+
+invoicify/
+  client/          # React-Frontend (Vite)
+    src/
+      components/
+      pages/
+      i18n/
+      factories/
+      ...
+  server/          # Fastify-Backend
+    src/
+      db/
+      routes/
+      ...
+  docker-compose.yml
+  README.md
+
+🔌 API (Beispiele)
+
+    Die genauen Routen können variieren – orientiere dich an server/src/routes/*.
+
+    POST /auth/register – neuen Benutzer anlegen
+
+    POST /auth/login – Token ausstellen
+
+    GET /customers / POST /customers / PATCH /customers/:id / DELETE /customers/:id
+
+    GET /invoices / POST /invoices / PATCH /invoices/:id / DELETE /invoices/:id
+
+Antwortformate: JSON
+Auth: Bearer Token (JWT) im Authorization-Header
+🛠️ Nützliche Scripts
+
+Client
+
+npm run dev         # Vite-Devserver
+npm run build       # Production-Build
+npm run preview     # Build lokal testen
+
+Server
+
+npm run dev         # Dev-Start (Hot Reload, falls konfiguriert)
+npm run start       # Prod-Start
+# ggf. npm run migrate / npm run db:... (falls definiert)
+
+🧩 i18n
+
+    Sprachen liegen i. d. R. unter client/src/i18n/languages/.
+
+    Neue Sprache hinzufügen: JSON-Datei anlegen, i18next config erweitern, Keys in Komponenten nutzen.
+    GitHub
+
+🗺️ Roadmap (Vorschläge)
+
+    PDF-Export & E-Mail-Versand direkt aus der App
+
+    Wiederkehrende Rechnungen & Zahlungserinnerungen
+
+    Mehrwährungs-Support & Rundungsregeln
+
+    Logo-Upload / Marken-Branding pro Account
+
+    Detaillierte Berichte (Umsatz pro Kunde, Zeitraum etc.)
+
+    Rollenkonzept (z. B. Admin/Editor)
+
+🤝 Mitwirken
+
+Issues & Pull Requests sind willkommen: Bitte kurze Beschreibung, Steps zum Reproduzieren und klaren Scope. Code-Style: Prettier/ESLint (falls konfiguriert) respektieren.
+📄 Lizenz
 
 MIT
+
+Wenn du willst, passe ich die README direkt an deine tatsächlichen Env-Variablen, Scripts und konkreten Routen im Code an (inkl. Beispiel-Requests mit curl/REST Client) – sag mir einfach, welche Teile ich aus dem Repo 1:1 spiegeln soll.
