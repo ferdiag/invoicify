@@ -4,13 +4,14 @@ import CTAButton from "../components/Button/Button";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
+import { PATHS } from "../../../shared/paths";
 
 const CustomersPage: React.FC = () => {
   const { user, deleteCustomer } = useUserStore();
   const navigate = useNavigate();
 
   const handleDeleteCustomer = async (id: string) => {
-    const response = await api.delete(`api/customer/${id}`);
+    const response = await api.delete(PATHS.CUSTOMERS.buildById(id));
     if (response.status === 200) {
       deleteCustomer(id);
     } else {

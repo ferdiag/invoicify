@@ -6,6 +6,7 @@ import { api } from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import type { User } from "../store/types";
+import { PATHS } from "../../../shared/paths";
 
 const EditCompanyData: React.FC = () => {
   const { user, handleApiError, editCompanyDataSuccess } = useUserStore();
@@ -31,7 +32,10 @@ const EditCompanyData: React.FC = () => {
   const formData = createFormData<User>(editedUser, t, keys);
 
   const handleUpdateCompanyData = async () => {
-    const response = await api.patch(`/api/user/${user!.id}`, editedUser);
+    const response = await api.patch(
+      PATHS.USERS.buildById(user.id),
+      editedUser
+    );
     if ([200, 201].includes(response.status)) {
       editCompanyDataSuccess(editedUser, navigate, t);
     } else {

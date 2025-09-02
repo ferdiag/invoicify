@@ -14,7 +14,7 @@ export const handleEditCompany = async (
       .update(users)
       .set(body)
       .where(eq(users.id, id))
-      .returning();
+      .returning({ id: users.id });
     if (!updatedCompany) {
       throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE);
     }

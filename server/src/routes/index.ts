@@ -1,13 +1,14 @@
-import {} from "fastify";
-import { handleRegister } from "../services/register.service";
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import { z } from "zod";
 
+import { handleRegister } from "../services/register.service";
 import { handleLogin } from "../services/login.service";
 import { handleAddCustomer } from "../services/add.customer.service";
 import { handleEditCustomer } from "../services/edit.customer.service";
 import { handleDeleteCustomer } from "../services/delete.customer";
 import { handleEditCompany } from "../services/edit.company";
 import { handleAddInvoice } from "../services/add.invoice.service";
-import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+
 import { AuthSchema } from "../zod/auth.schema";
 import {
   CustomerInsertSchema,
@@ -16,85 +17,126 @@ import {
 } from "../zod/customer.schema";
 import { UserPatchSchema } from "../zod/user.schema";
 import { InvoiceInsertSchema } from "../zod/invoice.schema";
+import { PATHS } from "../../../shared/paths";
+import { TAGS, HTTP, RESPONSES, SUMMARIES } from "../constants/api";
 
 export const routes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
-    "/register",
-    { schema: { body: AuthSchema } },
+    PATHS.AUTH.REGISTER,
+    {
+      schema: {
+        tags: [TAGS.AUTH],
+        summary: SUMMARIES.REGISTER,
+        body: AuthSchema,
+        response: { [HTTP.CREATED]: RESPONSES.Register },
+      },
+    },
     async (req, res) => {
-      const payload = req.body;
-      const response = await handleRegister(payload);
-      return res.status(201).send(response);
+      const response = await handleRegister(req.body);
+      return res.status(HTTP.CREATED).send(response);
     }
   );
-  fastify.post("/login", { schema: { body: AuthSchema } }, async (req, res) => {
-    const response = await handleLogin(req.body);
-    return res.status(201).send(response);
-  });
+
   fastify.post(
-    "/customer",
-    { schema: { body: CustomerInsertSchema } },
+    PATHS.AUTH.LOGIN,
+    {
+      schema: {
+        tags: [TAGS.AUTH],
+        summary: SUMMARIES.LOGIN,
+        body: AuthSchema,
+        response: { [HTTP.OK]: RESPONSES.Login },
+      },
+    },
+    async (req, res) => {
+      const response = await handleLogin(req.body);
+      return res.status(HTTP.OK).send(response);
+    }
+  );
+
+  fastify.post(
+    PATHS.CUSTOMERS.ROOT,
+    {
+      schema: {
+        tags: [TAGS.CUSTOMER],
+        summary: SUMMARIES.CREATE_CUSTOMER,
+        body: CustomerInsertSchema,
+        response: { [HTTP.CREATED]: RESPONSES.Id },
+      },
+    },
     async (req, res) => {
       const response = await handleAddCustomer(req.body);
-      return res.status(201).send(response);
+      return res.status(HTTP.CREATED).send(response);
     }
   );
 
   fastify.patch(
-    "/customer/:id",
+    PATHS.CUSTOMERS.BY_ID,
     {
       schema: {
+        tags: [TAGS.CUSTOMER],
+        summary: SUMMARIES.UPDATE_CUSTOMER,
         params: IdParamSchema,
         body: CustomerPatchSchema,
+        response: { [HTTP.OK]: RESPONSES.Updated },
       },
     },
     async (req, res) => {
-      const { id } = req.params;
-      const body = req.body;
-
+      const { id } = req.params as z.infer<typeof IdParamSchema>;
+      const body = req.body as z.infer<typeof CustomerPatchSchema>;
       const response = await handleEditCustomer(id, body);
-      return res.status(200).send(response);
+      return res.status(HTTP.OK).send(response);
     }
   );
+
   fastify.delete(
-    "/customer/:id",
+    PATHS.CUSTOMERS.BY_ID,
     {
       schema: {
+        tags: [TAGS.CUSTOMER],
+        summary: SUMMARIES.DELETE_CUSTOMER,
         params: IdParamSchema,
+        response: { [HTTP.NO_CONTENT]: RESPONSES.NoContent },
       },
     },
-    async (req, res) => {
-      const { id } = req.params;
-      const response = await handleDeleteCustomer(id);
-      return res.status(204).send(response); // weil ohne content
+    async (req, res): Promise<void> => {
+      const { id } = req.params as z.infer<typeof IdParamSchema>;
+      await handleDeleteCustomer(id);
+      return res.status(HTTP.NO_CONTENT).send();
     }
   );
+
   fastify.patch(
-    "/user/:id",
+    PATHS.USERS.BY_ID,
     {
       schema: {
+        tags: [TAGS.USER],
+        summary: SUMMARIES.UPDATE_USER,
         params: IdParamSchema,
         body: UserPatchSchema,
+        response: { [HTTP.OK]: RESPONSES.Updated },
       },
     },
     async (req, res) => {
-      const { id } = req.params;
-      const body = req.body;
-
+      const { id } = req.params as z.infer<typeof IdParamSchema>;
+      const body = req.body as z.infer<typeof UserPatchSchema>;
       const response = await handleEditCompany(id, body);
-      return res.status(200).send(response);
+      return res.status(HTTP.OK).send(response);
     }
   );
+
   fastify.post(
-    "/invoice",
+    PATHS.INVOICES.ROOT,
     {
       schema: {
+        tags: [TAGS.INVOICE],
+        summary: SUMMARIES.CREATE_INVOICE,
         body: InvoiceInsertSchema,
+        response: { [HTTP.CREATED]: RESPONSES.Id },
       },
     },
     async (req, res) => {
       const response = await handleAddInvoice(req.body);
-      return res.status(201).send(response);
+      return res.status(HTTP.CREATED).send(response);
     }
   );
 };

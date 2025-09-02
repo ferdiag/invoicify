@@ -4,4 +4,4 @@ export const AuthSchema = z.object({
   email: z.email(),
   password: z.string().min(8),
 });
-export type Register = z.infer<typeof AuthSchema>;
+const AuthBodyJson = z.toJSONSchema(AuthSchema);

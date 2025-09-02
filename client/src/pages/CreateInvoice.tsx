@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
 import type { Customer, Product } from "../store/types";
 import { api } from "../lib/api";
+import { PATHS } from "../../../shared/paths";
 
 const CreateInvoice: React.FC = () => {
   const {
@@ -28,7 +29,7 @@ const CreateInvoice: React.FC = () => {
     const customerName = user?.customers.find(
       (cust: Customer) => cust.id === invoiceData.customerId
     )?.name;
-    const response = await api.post("/api/invoice", {
+    const response = await api.post(PATHS.INVOICES.ROOT, {
       ...invoiceData,
       userId: user?.id,
       name: customerName,

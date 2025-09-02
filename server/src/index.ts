@@ -8,6 +8,8 @@ import {
 } from "fastify-type-provider-zod";
 import { routes } from "./routes";
 import { registerErrorHandler } from "./middleware/registerErrorHandler";
+import swagger from "@fastify/swagger";
+import swaggerUI from "@fastify/swagger-ui";
 
 dotenv.config();
 
@@ -19,7 +21,14 @@ async function main() {
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   });
-
+  app.register(swagger, {
+    openapi: {
+      openapi: "3.1.0", // wichtig: 3.1 spricht JSON Schema nativ
+      info: { title: "Auth API", version: "1.0.0" },
+      servers: [{ url: "http://localhost:3000" }],
+    },
+  });
+  app.register(swaggerUI, { routePrefix: "/docs" });
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 

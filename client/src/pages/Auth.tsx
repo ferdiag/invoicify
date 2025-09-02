@@ -5,12 +5,14 @@ import CTAButton from "../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
+import { PATHS, API_PREFIX } from "../../../shared/paths";
 
 type AuthData = {
   email: string;
   password: string;
 };
 
+const toApi = (p: string) => `${API_PREFIX}${p}`;
 const Auth: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("register");
   const navigate = useNavigate();
@@ -21,11 +23,16 @@ const Auth: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<AuthData>();
 
+  const AUTH_ENDPOINT: Record<"login" | "register", string> = {
+    login: PATHS.AUTH.LOGIN,
+    register: PATHS.AUTH.REGISTER,
+  };
+
   const { t } = useTranslation();
   const { loginSuccess, registerSuccess, handleApiError } = useUserStore();
   const onSubmit = async (data: AuthData) => {
     try {
-      const res = await api.post(`/api/${mode}`, data);
+      const res = await api.post(toApi(AUTH_ENDPOINT[mode]), data);
 
       if ([200, 201].includes(res.status)) {
         if (mode === "login") {

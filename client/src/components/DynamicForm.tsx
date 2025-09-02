@@ -9,15 +9,15 @@ type Field = {
   value: string;
 };
 
-type DynamicFormProps<T> = {
+type DynamicFormProps<T extends Record<string, unknown>> = {
   title?: string;
-  fields: Field[];
-  setState: React.Dispatch<React.SetStateAction<Partial<T>>>;
+  fields: Array<Field>;
+  setState: React.Dispatch<React.SetStateAction<T>>;
   onSubmit: () => void;
   submitLabel: string;
 };
 
-const DynamicForm = <T,>({
+const DynamicForm = <T extends Record<string, unknown>>({
   title,
   fields,
   setState,
@@ -26,11 +26,9 @@ const DynamicForm = <T,>({
 }: DynamicFormProps<T>) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    console.log(id, value);
-    setState((prevState) => {
-      return { ...prevState, [id]: value };
-    });
+    setState((prev) => ({ ...prev, [id as keyof T]: value } as T));
   };
+
   return (
     <div className="flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-lg">

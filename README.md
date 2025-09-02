@@ -29,8 +29,7 @@ Toast-Benachrichtigungen für klares Feedback
 Tech-Stack
 Frontend: React + TypeScript, React Router, React Hook Form, i18next, Tailwind, React-Toastify
 Backend: Fastify (Express-Kompatibilität für Middleware wo sinnvoll), Drizzle ORM, PostgreSQL
-Dev: Vite (FE), Node/NPM Scripts (BE) – Standardports: Frontend :5173, Backend :3000. 
-
+Dev: Vite (FE), Node/NPM Scripts (BE) – Standardports: Frontend :5173, Backend :3000.
 
 🚀 Getting Started
 Voraussetzungen
@@ -44,10 +43,12 @@ PostgreSQL (lokal oder via Docker)
 Installation
 
 # 1) Repo klonen
+
 git clone https://github.com/ferdiag/invoicify.git
 cd invoicify
 
 # 2) Abhängigkeiten installieren
+
 cd client && npm install
 cd ../server && npm install
 
@@ -79,10 +80,12 @@ Datenbank & Schema
 Development starten
 
 # Backend
+
 cd server
 npm run dev
 
 # Frontend (neues Terminal)
+
 cd client
 npm run dev
 
@@ -104,28 +107,28 @@ docker-compose up -d
 🧭 Projektstruktur (Kurzüberblick)
 
 invoicify/
-  client/          # React-Frontend (Vite)
-    src/
-      components/
-      pages/
-      i18n/
-      factories/
-      ...
-  server/          # Fastify-Backend
-    src/
-      db/
-      routes/
-      ...
-  docker-compose.yml
-  README.md
+client/ # React-Frontend (Vite)
+src/
+components/
+pages/
+i18n/
+factories/
+...
+server/ # Fastify-Backend
+src/
+db/
+routes/
+...
+docker-compose.yml
+README.md
 
 🔌 API (Beispiele)
 
     Die genauen Routen können variieren – orientiere dich an server/src/routes/*.
 
-    POST /auth/register – neuen Benutzer anlegen
+    POST /register – neuen Benutzer anlegen
 
-    POST /auth/login – Token ausstellen
+    POST /login – Token ausstellen
 
     GET /customers / POST /customers / PATCH /customers/:id / DELETE /customers/:id
 
@@ -137,14 +140,15 @@ Auth: Bearer Token (JWT) im Authorization-Header
 
 Client
 
-npm run dev         # Vite-Devserver
-npm run build       # Production-Build
-npm run preview     # Build lokal testen
+npm run dev # Vite-Devserver
+npm run build # Production-Build
+npm run preview # Build lokal testen
 
 Server
 
-npm run dev         # Dev-Start (Hot Reload, falls konfiguriert)
-npm run start       # Prod-Start
+npm run dev # Dev-Start (Hot Reload, falls konfiguriert)
+npm run start # Prod-Start
+
 # ggf. npm run migrate / npm run db:... (falls definiert)
 
 🧩 i18n

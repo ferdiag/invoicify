@@ -7,6 +7,30 @@ export type Product = {
   quantity: number;
   price: number;
 };
+
+export type Customer = {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  zip: string;
+  country: string;
+};
+
+export type CustomerCreate = Customer & {
+  userId: string;
+};
+
+export type CustomerUpdate = Partial<Customer> & {
+  userId: string;
+};
+
+export type CreateCustomerResponse = { id: string } | Customer;
+export type UpdateCustomerResponse = Customer;
+
 export type Invoice = {
   id: string;
   name: string;
@@ -19,6 +43,7 @@ export type Invoice = {
   grossAmount: string;
   products: Product[];
 };
+
 export type User = {
   id: string;
   email: string;
@@ -33,32 +58,7 @@ export type User = {
   invoices: Invoice[];
   taxNumber: string;
 };
-export type DefaultCustomer = {
-  name: string;
-  contact: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  zip: string;
-  country: string;
-};
-export type Customer = {
-  id: string;
-  name: string;
-  contact: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  zip: string;
-  country: string;
-};
-export type ProductChange = {
-  id: string;
-  field: string;
-  value: string;
-};
+
 export type InvoiceData = {
   customerId: string;
   products: { name: string; quantity: number; price: number; id: string }[];
@@ -68,11 +68,19 @@ export type InvoiceData = {
   netAmount: number;
   grossAmount: number;
 };
+
 export type State = {
   token: string | null;
   user: User | null;
   invoiceData: InvoiceData;
 };
+
+export type ProductChange = {
+  id: string;
+  field: string;
+  value: string;
+};
+
 export type UpdateProducts = {
   id: string;
   field: string;
@@ -80,6 +88,7 @@ export type UpdateProducts = {
   set: (partial: Partial<State>) => void;
   invoice: InvoiceData;
 };
+
 export type Actions = {
   logout: () => void;
   setToken: (token: string) => void;
@@ -94,15 +103,18 @@ export type Actions = {
     message: string,
     setMode: React.Dispatch<React.SetStateAction<"login" | "register">>
   ) => void;
+
   handleApiError: (
     error: unknown,
     t: TFunction<"translation", undefined>
   ) => void;
+
   editCompanyDataSuccess: (
     newUser: Partial<User>,
     navigate: NavigateFunction,
     t: TFunction<"translation", undefined>
   ) => void;
+
   updateCustomerSuccess: (data: Customer) => void;
   addCustomerSuccess: (data: Customer) => void;
   handleAddProduct: () => void;

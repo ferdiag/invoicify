@@ -1,4 +1,3 @@
-// zod/invoice.ts
 import { z } from "zod/v4";
 import { createInsertSchema } from "drizzle-zod";
 import { invoices } from "../db/schema";

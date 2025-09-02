@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { createFormData } from "../factories/createForms";
 import DynamicForm from "../components/DynamicForm";
-import type { Customer, DefaultCustomer } from "../store/types";
+import type { Customer } from "../store/types";
+import { PATHS } from "../../../shared/paths";
 
 const keys: (keyof Customer)[] = [
   "name",
@@ -17,7 +18,8 @@ const keys: (keyof Customer)[] = [
   "city",
   "country",
 ];
-const defaultCustomer: DefaultCustomer = {
+const defaultCustomer: Customer = {
+  id: "",
   name: "",
   contact: "",
   email: "",
@@ -32,8 +34,7 @@ const CustomerDetail: React.FC = () => {
   const { user, updateCustomerSuccess, addCustomerSuccess } = useUserStore();
   const navigate = useNavigate();
 
-  const [customer, setCustomer] =
-    useState<Partial<DefaultCustomer>>(defaultCustomer);
+  const [customer, setCustomer] = useState<Customer>(defaultCustomer);
 
   useEffect(() => {
     if (id) {
@@ -51,20 +52,20 @@ const CustomerDetail: React.FC = () => {
 
   const formData = createFormData<Customer>(customer, t, keys);
 
-  const handleSaveNewCustomer = async () => {
+  const handleSaveNewCustomer = async (): Promise<void> => {
     if (!user) return;
     const payload = { ...customer, userId: user.id };
 
-    const path = id ? `/api/customer/${id}` : "/api/customer";
+    const path = id ? PATHS.CUSTOMERS.buildById(id) : PATHS.CUSTOMERS.ROOT;
     const action = id ? "patch" : "post";
 
     const response = await api[action](path, payload);
-
+    const newCustomer = { ...customer, id: response.data.id };
     if ([200, 201].includes(response.status)) {
       if (id) {
-        updateCustomerSuccess(response.data);
+        updateCustomerSuccess(customer);
       } else {
-        addCustomerSuccess(response.data);
+        addCustomerSuccess(newCustomer);
       }
       navigate("/customers");
     }
