@@ -1,6 +1,6 @@
-import { useUserStore } from "../store/userStore";
 import { useParams } from "react-router-dom";
 import { t } from "i18next";
+import { useUserStore } from "../../store/userStore";
 
 const InvoiceDetail = () => {
   const { id } = useParams<{ id: string }>();

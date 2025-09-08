@@ -5,14 +5,14 @@ import CTAButton from "../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "../store/userStore";
-import { PATHS, API_PREFIX } from "../../../shared/paths";
+import { PATHS } from "../../../shared/paths";
+import { toApi } from "../lib/toApi";
 
 type AuthData = {
   email: string;
   password: string;
 };
 
-const toApi = (p: string) => `${API_PREFIX}${p}`;
 const Auth: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("register");
   const navigate = useNavigate();
@@ -31,6 +31,8 @@ const Auth: React.FC = () => {
   const { t } = useTranslation();
   const { loginSuccess, registerSuccess, handleApiError } = useUserStore();
   const onSubmit = async (data: AuthData) => {
+    console.log(data);
+
     try {
       const res = await api.post(toApi(AUTH_ENDPOINT[mode]), data);
 
@@ -42,6 +44,7 @@ const Auth: React.FC = () => {
         }
       }
     } catch (err: unknown) {
+      console.log(err);
       handleApiError(err, t);
     }
   };

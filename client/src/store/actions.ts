@@ -6,7 +6,7 @@ import type {
   Actions,
   Customer,
   UpdateProducts,
-  Product,
+  ProductWithId,
 } from "./types";
 import { t } from "i18next";
 
@@ -133,6 +133,7 @@ export const actions = (
       .replace(/[^0-9.]/g, "")
       .replace(/^(\d*\.\d{0,2}).*$/, "$1");
     const parsed = parseFloat(sanitized) || 0.0;
+    console.log(typeof parsed);
     updateProducts({ id, field, value, set, invoice: invoiceData });
 
     value = sanitized;
@@ -160,14 +161,15 @@ export const actions = (
     const netAmount = round2(
       invoiceData.products.reduce((sum, p) => sum + p.quantity * p.price, 0)
     );
-
+    console.log(invoiceData, netAmount);
     const grossAmount = round2(netAmount * (1 + invoiceData.vat / 100));
 
     set({ invoiceData: { ...invoiceData, netAmount, grossAmount } });
   },
 });
+
 const updateProducts = ({ id, field, value, set, invoice }: UpdateProducts) => {
-  const updatedProducts = invoice.products.map((prod: Product) =>
+  const updatedProducts = invoice.products.map((prod: ProductWithId) =>
     prod.id === id ? { ...prod, [field]: value } : prod
   );
   set({

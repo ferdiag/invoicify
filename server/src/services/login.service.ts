@@ -23,7 +23,7 @@ export const handleLogin = async (data: UserInsertType) => {
   if (!user) {
     throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
-
+  console.log(password);
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) {
     throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);

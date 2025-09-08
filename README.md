@@ -43,7 +43,7 @@ Frontend → http://localhost:5173
 
 API → http://localhost:3000
 📸 Screenshots
-<p align="center"> <img src="client/public/screenshot-dashboard.png" width="600" alt="Dashboard Screenshot" /> </p> <p align="center"> <img src="client/public/screenshot-invoice.png" width="600" alt="Invoice Creation Screenshot" /> </p>
+...
 📖 API Overview
 Method	Route	Description	Auth
 POST	/register	Create user	–

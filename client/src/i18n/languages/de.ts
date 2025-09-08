@@ -68,6 +68,7 @@ export default {
     netAmount: "Nettobetrag",
     grossAmount: "Bruttobetrag (inkl. MwSt.)",
     create: "Rechnung erstellen",
+    fillAllFields: "Bitte alle Felder ausfüllen",
   },
   displayInvoice: {
     noInvoices: "Keine Rechnungen gefunden.",

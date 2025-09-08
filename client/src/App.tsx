@@ -9,11 +9,11 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddCompanyData = lazy(() => import("./pages/EditCompanyData"));
-const CreateInvoice = lazy(() => import("./pages/CreateInvoice"));
+const CreateInvoice = lazy(() => import("./pages/invoice/CreateInvoice"));
 const CustomersPage = lazy(() => import("./pages/CustomersPage"));
 const CustomerDetail = lazy(() => import("./pages/CustomerDetail"));
-const Invoices = lazy(() => import("./pages/Invoices"));
-const InvoiceDetail = lazy(() => import("./pages/InvoiceDetail"));
+const Invoices = lazy(() => import("./pages/invoice/Invoices"));
+const InvoiceDetail = lazy(() => import("./pages/invoice/InvoiceDetail"));
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },

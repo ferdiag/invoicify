@@ -67,6 +67,7 @@ export default {
     netAmount: "Net amount",
     grossAmount: "Gross amount (incl. VAT)",
     create: "Create Invoice",
+    fillAllFields: "please fill all fields",
   },
   displayInvoice: {
     noInvoices: "No invoice found",

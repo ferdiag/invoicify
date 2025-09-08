@@ -1,12 +1,12 @@
 import type { TFunction } from "i18next";
 import type { NavigateFunction } from "react-router-dom";
 
-export type Product = {
-  id: string;
+export type ProductBase = {
   name: string;
   quantity: number;
   price: number;
 };
+export type ProductWithId = ProductBase & { id: string };
 
 export type Customer = {
   id: string;
@@ -41,7 +41,7 @@ export type Invoice = {
   vat: number;
   netAmount: string;
   grossAmount: string;
-  products: Product[];
+  products: ProductWithId[];
 };
 
 export type User = {

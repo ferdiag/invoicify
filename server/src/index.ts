@@ -11,6 +11,7 @@ import { routes } from "./routes";
 import { registerErrorHandler } from "./middleware/registerErrorHandler";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
+import pdfRoute from "./routes/invoice.pdf.route";
 
 dotenv.config();
 
@@ -34,16 +35,16 @@ async function main() {
   app.setSerializerCompiler(serializerCompiler);
 
   await app.register(routes, { prefix: "/api" });
+  app.register(pdfRoute); // ohne /api-Prefix, damit Browser direkt öffnen kann
   await registerErrorHandler(app);
-
   const EnvSchema = z.object({
     PORT: z.coerce.number().default(3000),
     HOST: z.string().default("0.0.0.0"),
   });
 
   const env = EnvSchema.parse(process.env);
-
   await app.listen({ port: env.PORT, host: env.HOST });
+
   app.log.info("Server läuft auf http://localhost:3000");
 }
 

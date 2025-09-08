@@ -24,8 +24,8 @@ export const InvoiceInsertSchema = createInsertSchema(invoices, {
   name: () => z.string().min(1).max(255),
   invoiceDate: () => z.coerce.date().transform(toYMD),
   dueDate: () => z.coerce.date().transform(toYMD),
+  vat: () => z.coerce.number(),
   netAmount: () => z.coerce.number().nonnegative().transform(moneyStr),
   grossAmount: () => z.coerce.number().nonnegative().transform(moneyStr),
-
   products: () => z.array(ProductItemSchema).min(1),
 }).omit({ id: true });

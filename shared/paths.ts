@@ -14,7 +14,7 @@ export const PATHS = {
     buildById: (id: string) => `/users/${id}`,
   },
   INVOICES: {
-    ROOT: "/invoices",
+    ROOT: "/save_invoice",
   },
 } as const;
 export const API_PREFIX = "/api";

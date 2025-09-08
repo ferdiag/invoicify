@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useUserStore } from "../store/userStore";
-import type { Customer, Product } from "../store/types";
-import { api } from "../lib/api";
-import { PATHS } from "../../../shared/paths";
+import { useUserStore } from "../../store/userStore";
+import type { Customer, ProductWithId } from "../../store/types";
+import { api } from "../../lib/api";
+import { PATHS } from "../../../../shared/paths";
+import { toApi } from "../../lib/toApi";
+import { toast } from "react-toastify";
 
 const CreateInvoice: React.FC = () => {
   const {
@@ -24,17 +26,47 @@ const CreateInvoice: React.FC = () => {
   useEffect(() => {
     handleCalculateTaxAndPrice();
   }, [handleCalculateTaxAndPrice, invoiceData.products, invoiceData.vat]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const customerName = user?.customers.find(
       (cust: Customer) => cust.id === invoiceData.customerId
     )?.name;
-    const response = await api.post(PATHS.INVOICES.ROOT, {
+
+    const path = toApi(PATHS.INVOICES.ROOT);
+
+    const cleanedProducts = invoiceData.products
+      .map((p) => ({ ...p, name: p.name.trim() }))
+      .filter((p) => p.name.length > 0 && Number(p.quantity) > 0);
+    const payload = {
       ...invoiceData,
       userId: user?.id,
       name: customerName,
+      products: cleanedProducts,
+    };
+    let hasEmptyField = false;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.entries(payload).forEach(([_, value]) => {
+      if (value === "" || value === null || value === undefined) {
+        console.log("Empty field found:", _);
+        hasEmptyField = true;
+        return;
+      }
     });
-    console.log("Invoice created:", response.data);
+    if (hasEmptyField) {
+      toast.error(t("invoice.fillAllFields"));
+      return;
+    }
+    const response = await api.post(path, payload);
+    if ([200, 201].includes(response.status)) {
+      toast.success(t("invoice.createSuccess"));
+      window.open(
+        `http://localhost:3000/invoices/${response.data.id}/pdf`,
+        "_blank",
+        "noopener"
+      );
+    }
+    console.log(response);
   };
   return (
     <div>
@@ -73,7 +105,7 @@ const CreateInvoice: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {invoiceData.products.map((product: Product) => (
+              {invoiceData.products.map((product: ProductWithId) => (
                 <tr key={product.id}>
                   <td className="px-2 py-1">
                     <input
