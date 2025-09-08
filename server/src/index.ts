@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
+import { z } from "zod";
 import {
   ZodTypeProvider,
   validatorCompiler,
@@ -23,7 +24,7 @@ async function main() {
   });
   app.register(swagger, {
     openapi: {
-      openapi: "3.1.0", // wichtig: 3.1 spricht JSON Schema nativ
+      openapi: "3.1.0",
       info: { title: "Auth API", version: "1.0.0" },
       servers: [{ url: "http://localhost:3000" }],
     },
@@ -35,7 +36,14 @@ async function main() {
   await app.register(routes, { prefix: "/api" });
   await registerErrorHandler(app);
 
-  await app.listen({ port: 3000, host: "0.0.0.0" });
+  const EnvSchema = z.object({
+    PORT: z.coerce.number().default(3000),
+    HOST: z.string().default("0.0.0.0"),
+  });
+
+  const env = EnvSchema.parse(process.env);
+
+  await app.listen({ port: env.PORT, host: env.HOST });
   app.log.info("Server läuft auf http://localhost:3000");
 }
 
