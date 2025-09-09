@@ -1,10 +1,10 @@
 import createError from "http-errors";
 import bcrypt from "bcrypt";
-import { ERROR_MESSAGES } from "../constants/errorMessages";
-import { db } from "../db/client";
-import { users } from "../db/schema";
-import { UserInsertType } from "../types/database.type";
-import { MESSAGES } from "../constants/successMessages";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
+import { db } from "../../db/client";
+import { users } from "../../db/schema";
+import { UserInsertType } from "../../types/database.type";
+import { MESSAGES } from "../../constants/successMessages";
 
 export const handleRegister = async (data: UserInsertType) => {
   const { email, password } = data;

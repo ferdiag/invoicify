@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/client";
-import { customers, invoices, users } from "../db/schema";
-import { UserInsertType, UserSelectType } from "../types/database.type";
+import { db } from "../../db/client";
+import { customers, invoices, users } from "../../db/schema";
+import { UserInsertType, UserSelectType } from "../../types/database.type";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { ERROR_MESSAGES } from "../constants/errorMessages";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
 
 export const handleLogin = async (data: UserInsertType) => {
@@ -23,8 +23,9 @@ export const handleLogin = async (data: UserInsertType) => {
   if (!user) {
     throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
-  console.log(password);
+
   const valid = await bcrypt.compare(password, user.password);
+
   if (!valid) {
     throw createHttpError.Unauthorized(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
@@ -45,7 +46,7 @@ export const handleLogin = async (data: UserInsertType) => {
     .select()
     .from(invoices)
     .where(eq(invoices.userId, user.id!));
-  console.log("rechnungen", targetInvoices);
+
   return {
     token,
     user: {

@@ -1,13 +1,13 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 
-import { handleRegister } from "../services/register.service";
-import { handleLogin } from "../services/login.service";
-import { handleAddCustomer } from "../services/add.customer.service";
-import { handleEditCustomer } from "../services/edit.customer.service";
-import { handleDeleteCustomer } from "../services/delete.customer";
-import { handleEditCompany } from "../services/edit.company";
-import { handleAddInvoice } from "../services/add.invoice.service";
+import { handleRegister } from "../services/register/register.service";
+import { handleLogin } from "../services/login/login.service";
+import { handleAddCustomer } from "../services/addCustomer/add.customer.service";
+import { handleEditCustomer } from "../services/editCostumer/edit.customer.service";
+import { handleDeleteCustomer } from "../services/delete.customer/delete.customer.service";
+import { handleEditCompany } from "../services/editCompany/edit.company";
+import { handleAddInvoice } from "../services/addInvoice/add.invoice.service";
 
 import { AuthSchema } from "../zod/auth.schema";
 import {

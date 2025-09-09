@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/client";
-import { users } from "../db/schema";
-import { ERROR_MESSAGES } from "../constants/errorMessages";
+import { db } from "../../db/client";
+import { users } from "../../db/schema";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
-import { UserType } from "../types/database.type";
+import { UserType } from "../../types/database.type";
 
 export const handleEditCompany = async (
   id: string,

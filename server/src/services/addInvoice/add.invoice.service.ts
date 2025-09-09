@@ -1,8 +1,8 @@
 import createHttpError from "http-errors";
-import { db } from "../db/client";
-import { invoices } from "../db/schema";
-import { InvoiceType } from "../types/database.type";
-import { ERROR_MESSAGES } from "../constants/errorMessages";
+import { db } from "../../db/client";
+import { invoices } from "../../db/schema";
+import { InvoiceType } from "../../types/database.type";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
 export const handleAddInvoice = async (data: InvoiceType) => {
   try {

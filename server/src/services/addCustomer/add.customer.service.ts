@@ -1,8 +1,8 @@
 import createHttpError from "http-errors";
-import { db } from "../db/client";
-import { customers } from "../db/schema";
-import { CustomerType } from "../types/database.type";
-import { ERROR_MESSAGES } from "../constants/errorMessages";
+import { db } from "../../db/client";
+import { customers } from "../../db/schema";
+import { CustomerType } from "../../types/database.type";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
 export const handleAddCustomer = async (
   data: CustomerType
