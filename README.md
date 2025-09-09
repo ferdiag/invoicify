@@ -1,5 +1,7 @@
 # Invoicify – Modern invoicing for freelancers and small businesses
 
+[![Tests (server)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml/badge.svg)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml)
+
 Fast and simple invoicing with customer management, VAT calculation (net/gross), and bilingual UI (DE/EN).  
 Built with **React, TypeScript, Fastify, PostgreSQL, Drizzle ORM**.
 
@@ -43,6 +45,7 @@ Frontend → http://localhost:5173
 
 API → http://localhost:3000
 📸 Screenshots
+
 ...
 📖 API Overview
 Method	Route	Description	Auth
@@ -51,7 +54,7 @@ POST	/login	Issue JWT	–
 GET	/customers	List customers	✓
 POST	/invoices	Create invoice (net/gross)	✓
 
-Full API docs available at http://localhost:3000/docs.
+.
 🛠️ Tech Stack
 
     Frontend: React, TypeScript, React Router, React Hook Form, Tailwind, i18next, React-Toastify
@@ -75,6 +78,12 @@ invoicify/
 
     Lint, typecheck, and minimal tests included (GitHub Actions CI)
 
+    npm run test:ci generates a coverage report under /coverage (also in CI artifacts)
+
+🤝 Contributing
+
+Issues and pull requests are welcome!
+Please open an issue for bugs or feature requests.
 📜 License
 
 This project is licensed under the MIT License – see LICENSE for details.
