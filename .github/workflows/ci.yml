@@ -9,7 +9,7 @@ on:
     paths:
       - "server/**"
       - ".github/workflows/ci.yml"
-
+  workflow_dispatch: #set for dispatch workflow via github actions
 # cancel older runs on the same branch
 concurrency:
   group: server-tests-${{ github.ref }}
