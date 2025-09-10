@@ -63,9 +63,7 @@ describe("handleRegister", () => {
     const password = "NochSicherer!456";
 
     (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-456");
-    mockInsertThrow(
-      new Error("duplicate key value violates unique constraint")
-    );
+    mockInsertThrow(new Error("duplicate key value violates unique constraint"));
 
     const p = handleRegister({ email, password } as any);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);

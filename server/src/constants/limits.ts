@@ -11,6 +11,5 @@ export const LIMITS = {
 };
 
 export const MSG = {
-  tooLong: (label: string, max: number) =>
-    `${label} ist zu lang (max. ${max} Zeichen).`,
+  tooLong: (label: string, max: number) => `${label} ist zu lang (max. ${max} Zeichen).`,
 };

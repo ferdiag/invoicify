@@ -11,27 +11,14 @@ function euro(n: number) {
   }).format(n);
 }
 
-export async function buildInvoicePdfStream(
-  id: string
-): Promise<PDFKit.PDFDocument> {
+export async function buildInvoicePdfStream(id: string): Promise<PDFKit.PDFDocument> {
   const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, id) });
   if (!inv) throw new Error("Invoice not found");
 
-  const [cust] = await db
-    .select()
-    .from(customers)
-    .where(eq(customers.id, inv.customerId))
-    .limit(1);
-  const [usr] = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, inv.userId))
-    .limit(1);
+  const [cust] = await db.select().from(customers).where(eq(customers.id, inv.customerId)).limit(1);
+  const [usr] = await db.select().from(users).where(eq(users.id, inv.userId)).limit(1);
 
-  const net = inv.products.reduce(
-    (s, p) => s + Number(p.quantity) * Number(p.price),
-    0
-  );
+  const net = inv.products.reduce((s, p) => s + Number(p.quantity) * Number(p.price), 0);
   const gross = +(net * (1 + inv.vat / 100)).toFixed(2);
 
   const doc = new PDFDocument({ size: "A4", margin: 50 });

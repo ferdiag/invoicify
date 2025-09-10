@@ -10,11 +10,7 @@ import { handleEditCompany } from "../services/editCompany/edit.company";
 import { handleAddInvoice } from "../services/addInvoice/add.invoice.service";
 
 import { AuthSchema } from "../zod/auth.schema";
-import {
-  CustomerInsertSchema,
-  CustomerPatchSchema,
-  IdParamSchema,
-} from "../zod/customer.schema";
+import { CustomerInsertSchema, CustomerPatchSchema, IdParamSchema } from "../zod/customer.schema";
 import { UserPatchSchema } from "../zod/user.schema";
 import { InvoiceInsertSchema } from "../zod/invoice.schema";
 import { PATHS } from "../../../shared/paths";

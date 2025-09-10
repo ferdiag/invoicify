@@ -33,7 +33,7 @@ const makeInvoicePayload = (overrides: Partial<any> = {}) =>
       { id: "p2", name: "Design Review", price: "5000", quantity: 1 },
     ],
     ...overrides,
-  } as any);
+  }) as any;
 
 describe("handleAddInvoice", () => {
   beforeEach(() => {

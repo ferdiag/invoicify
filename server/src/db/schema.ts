@@ -1,11 +1,4 @@
-import {
-  integer,
-  jsonb,
-  numeric,
-  pgTable,
-  uuid,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { integer, jsonb, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
 export type ProductItem = {
   id: string;

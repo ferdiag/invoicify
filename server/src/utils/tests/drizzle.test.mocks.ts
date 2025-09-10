@@ -16,11 +16,7 @@ export const mockDeleteReturning = (db: any, rows: any[]) => {
   });
 };
 
-export const mockDrizzleThrow = (
-  db: any,
-  method: "insert" | "update" | "delete",
-  err: any
-) => {
+export const mockDrizzleThrow = (db: any, method: "insert" | "update" | "delete", err: any) => {
   (db[method] as jest.Mock).mockImplementation(() => {
     throw err;
   });

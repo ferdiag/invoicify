@@ -2,11 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import { z } from "zod";
-import {
-  ZodTypeProvider,
-  validatorCompiler,
-  serializerCompiler,
-} from "fastify-type-provider-zod";
+import { ZodTypeProvider, validatorCompiler, serializerCompiler } from "fastify-type-provider-zod";
 import { routes } from "./routes";
 import { registerErrorHandler } from "./middleware/registerErrorHandler";
 import swagger from "@fastify/swagger";

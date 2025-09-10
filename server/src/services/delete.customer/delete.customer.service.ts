@@ -4,9 +4,7 @@ import { customers } from "../../db/schema";
 import createHttpError from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
-export const handleDeleteCustomer = async (
-  id: string
-): Promise<{ id: string }> => {
+export const handleDeleteCustomer = async (id: string): Promise<{ id: string }> => {
   try {
     const rows = await db
       .delete(customers)
@@ -18,17 +16,12 @@ export const handleDeleteCustomer = async (
     }
     return { id: rows[0].id };
   } catch (err: any) {
-    if (
-      createHttpError.isHttpError?.(err) ||
-      err instanceof createHttpError.HttpError
-    ) {
+    if (createHttpError.isHttpError?.(err) || err instanceof createHttpError.HttpError) {
       throw err;
     }
     if (err?.code === "22P02") {
       throw createHttpError.BadRequest("Invalid customer id");
     }
-    throw createHttpError.InternalServerError(
-      ERROR_MESSAGES.DATABASE_QUERY_FAILED
-    );
+    throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
 };

@@ -15,9 +15,7 @@ export const handleLogin = async (data: UserInsertType) => {
   try {
     [user] = await db.select().from(users).where(eq(users.email, email));
   } catch {
-    throw createHttpError.InternalServerError(
-      ERROR_MESSAGES.DATABASE_QUERY_FAILED
-    );
+    throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
 
   if (!user) {
@@ -36,16 +34,10 @@ export const handleLogin = async (data: UserInsertType) => {
     { expiresIn: "1h" }
   );
 
-  const targetCustomer = await db
-    .select()
-    .from(customers)
-    .where(eq(customers.userId, user.id!));
+  const targetCustomer = await db.select().from(customers).where(eq(customers.userId, user.id!));
 
   const { password: _, ...userdata } = user;
-  const targetInvoices = await db
-    .select()
-    .from(invoices)
-    .where(eq(invoices.userId, user.id!));
+  const targetInvoices = await db.select().from(invoices).where(eq(invoices.userId, user.id!));
 
   return {
     token,

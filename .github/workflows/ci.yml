@@ -60,4 +60,4 @@ jobs:
         with:
           name: server-coverage
           path: server/coverage
-          if-no-files-found: error
+          if-no-files-found: warn

@@ -5,10 +5,7 @@ import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
 import { UserType } from "../../types/database.type";
 
-export const handleEditCompany = async (
-  id: string,
-  body: Partial<UserType>
-) => {
+export const handleEditCompany = async (id: string, body: Partial<UserType>) => {
   try {
     const [updatedCompany] = await db
       .update(users)
@@ -20,8 +17,6 @@ export const handleEditCompany = async (
     }
     return updatedCompany;
   } catch (error) {
-    throw createHttpError.InternalServerError(
-      ERROR_MESSAGES.DATABASE_QUERY_FAILED
-    );
+    throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
 };

@@ -30,9 +30,7 @@ describe("handleEditCompany", () => {
   it("returns id on success", async () => {
     const id = "11111111-2222-3333-4444-555555555555";
     mockUpdateReturning([{ id }]);
-    await expect(
-      handleEditCompany(id, { company: "ACME" } as any)
-    ).resolves.toEqual({ id });
+    await expect(handleEditCompany(id, { company: "ACME" } as any)).resolves.toEqual({ id });
   });
 
   it("not found is mapped to 500 (current behavior)", async () => {

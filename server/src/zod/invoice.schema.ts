@@ -12,10 +12,7 @@ export const ProductItemSchema = z.object({
   price: z.coerce
     .number()
     .nonnegative()
-    .refine(
-      (v) => Math.round(v * 100) === v * 100,
-      "Maximal zwei Nachkommastellen."
-    ),
+    .refine((v) => Math.round(v * 100) === v * 100, "Maximal zwei Nachkommastellen."),
 });
 
 export const InvoiceInsertSchema = createInsertSchema(invoices, {
