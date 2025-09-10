@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db/client";
 import { customers } from "../../db/schema";
-import createHttpError from "http-errors";
+import createHttpError, { HttpError } from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
 export const handleDeleteCustomer = async (id: string): Promise<{ id: string }> => {
@@ -12,16 +12,24 @@ export const handleDeleteCustomer = async (id: string): Promise<{ id: string }> 
       .returning({ id: customers.id });
 
     if (rows.length === 0) {
-      throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_DELETE);
+      throw new createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_DELETE);
     }
+
     return { id: rows[0].id };
-  } catch (err: any) {
-    if (createHttpError.isHttpError?.(err) || err instanceof createHttpError.HttpError) {
+  } catch (err: unknown) {
+    // bereits ein HttpError? → direkt weiterwerfen
+    if (err instanceof HttpError || createHttpError.isHttpError(err)) {
       throw err;
     }
-    if (err?.code === "22P02") {
-      throw createHttpError.BadRequest("Invalid customer id");
+
+    // Postgres: invalid_text_representation (uuid parse error)
+    if (typeof err === "object" && err !== null && "code" in err) {
+      const code = (err as { code?: string }).code;
+      if (code === "22P02") {
+        throw new createHttpError.BadRequest(ERROR_MESSAGES.INVALID_CUSTOMER_ID);
+      }
     }
-    throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+
+    throw new createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
 };

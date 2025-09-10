@@ -6,13 +6,13 @@ import createHttpError from "http-errors";
 import { handleDeleteCustomer } from "./delete.customer.service";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
-const mockDeleteReturning = (rows: any[]) => {
+const mockDeleteReturning = (rows: Array<{ id: string }>) => {
   (db.delete as jest.Mock).mockReturnValue({
     where: () => ({ returning: async () => rows }),
   });
 };
 
-const mockDeleteThrow = (err: any) => {
+const mockDeleteThrow = (err: unknown) => {
   (db.delete as jest.Mock).mockImplementation(() => {
     throw err;
   });
