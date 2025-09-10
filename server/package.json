@@ -1,8 +1,7 @@
-{
-  "type": "module",
+{  
   "scripts": {
-    "dev": "nodemon",
-    "seed": "ts-node src/db/seed.ts",
+    "dev": "nodemon --exec tsx src/index.ts",
+    "seed": "tsx src/db/seed.ts",
     "test:watch": "jest --watch",
     "test:changed": "jest -o",
     "typecheck": "tsc --noEmit",
@@ -50,7 +49,7 @@
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.3",
+    "tsx": "^4.20.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.43.0"
   }
