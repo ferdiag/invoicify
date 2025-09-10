@@ -1,11 +1,13 @@
 {
   "scripts": {
     "dev": "nodemon",
-    "seed": "ts-node src/db/seed.ts ",
+    "seed": "ts-node src/db/seed.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --runInBand --coverage",
-    "test:changed": "jest -o"
+    "test:changed": "jest -o",
+    "lint": "eslint 'src/**/*.{ts,tsx}' --max-warnings=0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",

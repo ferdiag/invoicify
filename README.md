@@ -1,8 +1,8 @@
 # Invoicify – Modern invoicing for freelancers and small businesses
 
-[![Tests (server)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml/badge.svg)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml)
+![Tests (server)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/github/license/ferdiag/invoicify)
 
-Fast and simple invoicing with customer management, VAT calculation (net/gross), and bilingual UI (DE/EN).  
 Built with **React, TypeScript, Fastify, PostgreSQL, Drizzle ORM**.
 
 ---
@@ -18,43 +18,56 @@ Built with **React, TypeScript, Fastify, PostgreSQL, Drizzle ORM**.
 
 ---
 
-## 🚀 Quickstart
+## 📸 Screenshots
+
+_(to be added later)_
+
+```markdown
+![Dashboard](docs/screenshots/dashboard.png)
+![Invoice Creation](docs/screenshots/invoice.png)
+
+🚀 Quickstart
 
 Clone and run with PostgreSQL via Docker Compose:
 
-```bash
 git clone https://github.com/ferdiag/invoicify.git
 cd invoicify
 
 # Start Postgres (port 5433)
+
 docker compose up -d db
 
 # Backend
+
 cd server
 cp .env.example .env
 npm install
 npm run dev &
 
 # Frontend
+
 cd ../client
 cp .env.example .env
 npm install
 npm run dev
 
-Frontend → http://localhost:5173
+    Frontend → http://localhost:5173
 
 API → http://localhost:3000
-📸 Screenshots
 
-...
-📖 API Overview
-Method	Route	Description	Auth
-POST	/register	Create user	–
-POST	/login	Issue JWT	–
-GET	/customers	List customers	✓
-POST	/invoices	Create invoice (net/gross)	✓
+| Method | Route          | Description                | Auth |
+| ------ | -------------- | -------------------------- | ---- |
+| POST   | /register      | Create new user            | –    |
+| POST   | /login         | Issue JWT                  | –    |
+| GET    | /customers     | List all customers         | ✓    |
+| POST   | /customers     | Create new customer        | ✓    |
+| PATCH  | /customers/:id | Update customer            | ✓    |
+| DELETE | /customers/:id | Delete customer            | ✓    |
+| PATCH  | /users/:id     | Update user/company data   | ✓    |
+| GET    | /invoices      | List invoices              | ✓    |
+| POST   | /invoices      | Create invoice (net/gross) | ✓    |
 
-.
+_(✓ = requires JWT authentication)_
 🛠️ Tech Stack
 
     Frontend: React, TypeScript, React Router, React Hook Form, Tailwind, i18next, React-Toastify
@@ -66,9 +79,9 @@ POST	/invoices	Create invoice (net/gross)	✓
 📂 Project Structure
 
 invoicify/
-├── client/     # React frontend
-├── server/     # Fastify backend
-└── shared/     # Shared types & utilities
+├── client/ # React frontend
+├── server/ # Fastify backend
+└── shared/ # Shared types & utilities
 
 ⚡ Development Notes
 
@@ -76,9 +89,9 @@ invoicify/
 
     Seed script creates a demo user and sample customer/invoice
 
-    Lint, typecheck, and minimal tests included (GitHub Actions CI)
+    CI runs lint, typecheck, and tests (GitHub Actions)
 
-    npm run test:ci generates a coverage report under /coverage (also in CI artifacts)
+    npm run test:ci generates a coverage report under /coverage (also uploaded as CI artifact + Codecov)
 
 🤝 Contributing
 
@@ -87,4 +100,6 @@ Please open an issue for bugs or feature requests.
 📜 License
 
 This project is licensed under the MIT License – see LICENSE for details.
+
+---
 ```
