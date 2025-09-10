@@ -10,6 +10,7 @@ export type ProductItem = {
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email", { length: 255 }).notNull().unique(),
+  company: varchar("company", { length: 255 }).default(""),
   password: varchar("password", { length: 255 }).notNull(),
   phone: varchar("phone", { length: 50 }).default(""),
   address: varchar("address", { length: 255 }).default(""),

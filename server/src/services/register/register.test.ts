@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import { handleRegister } from "./register.service";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import { MESSAGES } from "../../constants/successMessages";
+import { UserInsertType } from "../../types/database.type";
 
 const mockInsertResolves = () => {
   (db.insert as jest.Mock).mockReturnValue({
@@ -15,7 +16,7 @@ const mockInsertResolves = () => {
   });
 };
 
-const mockInsertThrow = (err: any) => {
+const mockInsertThrow = (err: unknown) => {
   (db.insert as jest.Mock).mockImplementation(() => {
     throw err;
   });
@@ -33,14 +34,14 @@ describe("handleRegister", () => {
     (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-123");
     mockInsertResolves();
 
-    const res = await handleRegister({ email, password } as any);
+    const res = await handleRegister({ email, password } as UserInsertType);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
     expect(res).toEqual({ message: MESSAGES.REGISTER, email });
   });
 
   it("missing email or password → 400 BadRequest", async () => {
-    const p1 = handleRegister({ email: "", password: "x" } as any);
+    const p1 = handleRegister({ email: "", password: "x" } as UserInsertType);
     await expect(p1).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p1).rejects.toMatchObject({
       status: 400,
@@ -50,7 +51,7 @@ describe("handleRegister", () => {
     const p2 = handleRegister({
       email: "erika.mustermann@example.org",
       password: "",
-    } as any);
+    } as UserInsertType);
     await expect(p2).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p2).rejects.toMatchObject({
       status: 400,
@@ -65,7 +66,7 @@ describe("handleRegister", () => {
     (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-456");
     mockInsertThrow(new Error("duplicate key value violates unique constraint"));
 
-    const p = handleRegister({ email, password } as any);
+    const p = handleRegister({ email, password } as UserInsertType);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 409,

@@ -16,7 +16,7 @@ export const handleEditCompany = async (id: string, body: Partial<UserType>) => 
       throw createHttpError.NotFound(ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE);
     }
     return updatedCompany;
-  } catch (error) {
+  } catch (_: unknown) {
     throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
 };

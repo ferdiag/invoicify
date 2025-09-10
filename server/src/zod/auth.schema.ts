@@ -4,4 +4,4 @@ export const AuthSchema = z.object({
   email: z.email(),
   password: z.string().min(8),
 });
-const AuthBodyJson = z.toJSONSchema(AuthSchema);
+export const AuthBodyJson = z.toJSONSchema(AuthSchema);

@@ -78,6 +78,13 @@
       "when": 1754301188090,
       "tag": "0010_quiet_korg",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1757501865798,
+      "tag": "0011_tiny_red_wolf",
+      "breakpoints": true
     }
   ]
 }

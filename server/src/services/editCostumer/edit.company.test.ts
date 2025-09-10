@@ -1,12 +1,14 @@
-// src/services/edit.company.test.ts
 jest.mock("../../db/client", () => ({ db: { update: jest.fn() } }));
 
 import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import { handleEditCompany } from "../editCompany/edit.company";
+import { UserPatchType } from "../../zod/user.schema";
 
-const mockUpdateReturning = (rows: any[]) => {
+type RowWithId = { id: string };
+
+const mockUpdateReturning = (rows: RowWithId[]) => {
   (db.update as jest.Mock).mockReturnValue({
     set: () => ({
       where: () => ({
@@ -16,9 +18,12 @@ const mockUpdateReturning = (rows: any[]) => {
   });
 };
 
-const mockUpdateThrow = (err: any) => {
+const toError = (e: unknown): Error =>
+  e instanceof Error ? e : new Error(e ? String(e) : "Unknown error");
+
+const mockUpdateThrow = (err?: unknown) => {
   (db.update as jest.Mock).mockImplementation(() => {
-    throw err;
+    throw toError(err);
   });
 };
 
@@ -30,14 +35,17 @@ describe("handleEditCompany", () => {
   it("returns id on success", async () => {
     const id = "11111111-2222-3333-4444-555555555555";
     mockUpdateReturning([{ id }]);
-    await expect(handleEditCompany(id, { company: "ACME" } as any)).resolves.toEqual({ id });
+
+    const patch: UserPatchType = { company: "ACME" };
+    await expect(handleEditCompany(id, patch)).resolves.toEqual({ id });
   });
 
   it("not found is mapped to 500 (current behavior)", async () => {
-    mockUpdateReturning([]);
-    const p = handleEditCompany("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", {
-      company: "X",
-    } as any);
+    mockUpdateReturning([]); // keine Row zurück
+
+    const patch: UserPatchType = { company: "X" };
+    const p = handleEditCompany("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", patch);
+
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 500,
@@ -47,9 +55,10 @@ describe("handleEditCompany", () => {
 
   it("db error → 500", async () => {
     mockUpdateThrow(new Error("DB down"));
-    const p = handleEditCompany("11111111-2222-3333-4444-555555555555", {
-      company: "X",
-    } as any);
+
+    const patch: UserPatchType = { company: "X" };
+    const p = handleEditCompany("11111111-2222-3333-4444-555555555555", patch);
+
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 500,

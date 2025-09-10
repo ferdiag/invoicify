@@ -5,6 +5,7 @@ import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import { handleAddInvoice } from "./add.invoice.service";
+import { InvoiceInsertType } from "../../types/database.type";
 
 const mockInsertSuccess = (id: string) => {
   (db.insert as jest.Mock).mockReturnValue({
@@ -12,13 +13,20 @@ const mockInsertSuccess = (id: string) => {
   });
 };
 
-const mockInsertThrow = (err: any) => {
-  (db.insert as jest.Mock).mockImplementation(() => {
-    throw err;
+type DbMock = { insert: jest.Mock<() => unknown> };
+
+const mdb = db as unknown as DbMock;
+
+const toError = (e: unknown): Error =>
+  e instanceof Error ? e : new Error(e ? String(e) : "Unknown error");
+
+const mockInsertThrow = (err?: unknown) => {
+  mdb.insert.mockImplementation(() => {
+    throw toError(err); // <- auch undefined wird zu einem echten Error
   });
 };
 
-const makeInvoicePayload = (overrides: Partial<any> = {}) =>
+const makeInvoicePayload = (overrides: Partial<InvoiceInsertType> = {}) =>
   ({
     name: "Invoice #2025-0001",
     userId: "11111111-2222-3333-4444-555555555555",
@@ -33,7 +41,7 @@ const makeInvoicePayload = (overrides: Partial<any> = {}) =>
       { id: "p2", name: "Design Review", price: "5000", quantity: 1 },
     ],
     ...overrides,
-  }) as any;
+  }) as InvoiceInsertType;
 
 describe("handleAddInvoice", () => {
   beforeEach(() => {

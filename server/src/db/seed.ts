@@ -1,6 +1,5 @@
 import { db } from "./client"; // deine Drizzle-Verbindung
 import { users, customers, invoices } from "./schema";
-import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
 

@@ -12,8 +12,12 @@ const invoicePdfRoute: FastifyPluginAsync = async (app) => {
 
       const doc = await buildInvoicePdfStream(id);
       return reply.send(doc); // << keine weiteren writes/end!
-    } catch (err: any) {
-      return reply.code(404).send({ message: err?.message ?? "PDF generation failed" });
+    } catch (err: unknown) {
+      const message =
+        typeof err === "object" && err !== null && "message" in err
+          ? (err as { message: string }).message
+          : "PDF generation failed";
+      return reply.code(404).send({ message });
     }
   });
 };

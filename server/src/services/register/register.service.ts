@@ -17,7 +17,7 @@ export const handleRegister = async (data: UserInsertType) => {
   const newUser = { email, password: hashedPassword };
   try {
     await db.insert(users).values(newUser);
-  } catch (error: any) {
+  } catch (_: unknown) {
     throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
   }
 
