@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const TAGS = {
   AUTH: "Auth",
@@ -29,7 +29,7 @@ export const SUMMARIES = {
 
 export const RESPONSES = {
   Id: z.object({ id: z.string() }),
-  Register: z.object({ email: z.string().email(), message: z.string() }),
+  Register: z.object({ email: z.email().max(255), message: z.string() }),
   Login: z.object({ user: z.unknown(), token: z.string() }),
   Updated: z.object({ id: z.string() }),
   NoContent: z.null(),

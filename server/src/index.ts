@@ -2,7 +2,12 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import { z } from "zod";
-import { ZodTypeProvider, validatorCompiler, serializerCompiler } from "fastify-type-provider-zod";
+import {
+  ZodTypeProvider,
+  validatorCompiler,
+  serializerCompiler,
+  jsonSchemaTransform,
+} from "fastify-type-provider-zod";
 import { routes } from "./routes";
 import { registerErrorHandler } from "./middleware/registerErrorHandler";
 import swagger from "@fastify/swagger";
@@ -25,19 +30,21 @@ async function main() {
       info: { title: "Auth API", version: "1.0.0" },
       servers: [{ url: "http://localhost:3000" }],
     },
+    transform: jsonSchemaTransform,
   });
+  app.withTypeProvider<ZodTypeProvider>();
+
   app.register(swaggerUI, { routePrefix: "/docs" });
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
   await app.register(routes, { prefix: "/api" });
-  app.register(pdfRoute); // ohne /api-Prefix, damit Browser direkt öffnen kann
+  app.register(pdfRoute);
   await registerErrorHandler(app);
   const EnvSchema = z.object({
     PORT: z.coerce.number().default(3000),
     HOST: z.string().default("0.0.0.0"),
   });
-
   const env = EnvSchema.parse(process.env);
   await app.listen({ port: env.PORT, host: env.HOST });
 

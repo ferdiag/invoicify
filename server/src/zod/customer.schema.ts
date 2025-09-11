@@ -1,19 +1,26 @@
 import { z } from "zod/v4";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { customers } from "../db/schema";
 
-export const CustomerSelectSchema = createInsertSchema(customers);
+export const CustomerSelectSchema = createSelectSchema(customers).strict();
+
 export const CustomerInsertSchema = createInsertSchema(customers, {
-  email: (schema) => schema.email().optional(),
-  contact: (schema) => schema.optional(),
-  phone: (schema) => schema.optional(),
-  address: (schema) => schema.optional(),
-  city: (schema) => schema.optional(),
-  zip: (schema) => schema.optional(),
-  country: (schema) => schema.optional(),
-}).omit({ id: true });
-export const CustomerPatchSchema = CustomerInsertSchema.partial();
-export const IdParamSchema = z.object({ id: z.uuid() });
+  email: (s) => s.email().optional(),
+  contact: (s) => s.optional(),
+  phone: (s) => s.optional(),
+  address: (s) => s.optional(),
+  city: (s) => s.optional(),
+  zip: (s) => s.optional(),
+  country: (s) => s.optional(),
+})
+  .omit({ id: true })
+  .strict();
+
+export const CustomerPatchSchema = CustomerInsertSchema.partial().strict();
+export const IdParamSchema = z.object({ id: z.uuid() }).strict();
+
 export type CustomerInsertType = z.infer<typeof CustomerInsertSchema>;
 export type CustomerSelectType = z.infer<typeof CustomerSelectSchema>;
 export type CustomerPatchType = z.infer<typeof CustomerPatchSchema>;
+
+export const CustomerSelectJson = z.toJSONSchema(CustomerSelectSchema);

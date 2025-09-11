@@ -1,5 +1,4 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import { z } from "zod";
 
 import { handleRegister } from "../services/register/register.service";
 import { handleLogin } from "../services/login/login.service";
@@ -77,8 +76,8 @@ export const routes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     async (req, res) => {
-      const { id } = req.params as z.infer<typeof IdParamSchema>;
-      const body = req.body as z.infer<typeof CustomerPatchSchema>;
+      const { id } = req.params;
+      const body = req.body;
       const response = await handleEditCustomer(id, body);
       return res.status(HTTP.OK).send(response);
     }
@@ -95,7 +94,7 @@ export const routes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     async (req, res): Promise<void> => {
-      const { id } = req.params as z.infer<typeof IdParamSchema>;
+      const { id } = req.params;
       await handleDeleteCustomer(id);
       return res.status(HTTP.NO_CONTENT).send();
     }
@@ -113,8 +112,8 @@ export const routes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     async (req, res) => {
-      const { id } = req.params as z.infer<typeof IdParamSchema>;
-      const body = req.body as z.infer<typeof UserPatchSchema>;
+      const { id } = req.params;
+      const body = req.body;
       const response = await handleEditCompany(id, body);
       return res.status(HTTP.OK).send(response);
     }
@@ -131,7 +130,8 @@ export const routes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     async (req, res) => {
-      const response = await handleAddInvoice(req.body);
+      const data = req.body;
+      const response = await handleAddInvoice(data);
       return res.status(HTTP.CREATED).send(response);
     }
   );

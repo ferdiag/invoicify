@@ -17,8 +17,12 @@ export const handleRegister = async (data: UserInsertType) => {
   const newUser = { email, password: hashedPassword };
   try {
     await db.insert(users).values(newUser);
-  } catch (_: unknown) {
-    throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
+  } catch (err: unknown) {
+    const e = err as { code?: string };
+    if (e.code === "23505") {
+      throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
+    }
+    throw createError.BadGateway(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 
   return {

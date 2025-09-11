@@ -47,7 +47,10 @@ export const invoices = pgTable("invoices", {
   invoiceDate: varchar("invoice_date").notNull(),
   dueDate: varchar("due_date").notNull(),
   vat: integer("vat").notNull(),
-  netAmount: numeric("net_amount", { precision: 10, scale: 2 }).notNull(),
-  grossAmount: numeric("gross_amount", { precision: 10, scale: 2 }).notNull(),
+  netAmount: numeric("net_amount", { precision: 10, scale: 2 }).notNull().$type<number>().notNull(),
+  grossAmount: numeric("gross_amount", { precision: 10, scale: 2 })
+    .notNull()
+    .$type<number>()
+    .notNull(),
   products: jsonb("products").$type<ProductItem[]>().notNull(),
 });
