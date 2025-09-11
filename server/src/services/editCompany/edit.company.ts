@@ -3,9 +3,9 @@ import { db } from "../../db/client";
 import { users } from "../../db/schema";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
-import { UserType } from "../../types/database.type";
+import { UserInsertType } from "../../types/database.type";
 
-export const handleEditCompany = async (id: string, body: Partial<UserType>) => {
+export const handleEditCompany = async (id: string, body: Partial<UserInsertType>) => {
   try {
     const [updatedCompany] = await db
       .update(users)

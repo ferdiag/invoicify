@@ -5,7 +5,7 @@ import createHttpError from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import { db } from "../../db/client";
 import { handleAddCustomer } from "./add.customer.service";
-import { CustomerType } from "../../types/database.type";
+import { CustomerInsertType } from "../../types/database.type";
 
 const mockInsertSuccess = (id: string) => {
   (db.insert as jest.Mock).mockReturnValue({
@@ -35,7 +35,7 @@ describe("handleAddCustomer", () => {
     const id = "1111111111122222223333333333";
     mockInsertSuccess(id);
 
-    const result = await handleAddCustomer({ name: "ACME GmbH" } as CustomerType);
+    const result = await handleAddCustomer({ name: "ACME GmbH" } as CustomerInsertType);
     expect(result).toEqual({ id });
     expect(db.insert).toHaveBeenCalledTimes(1);
   });
@@ -43,7 +43,7 @@ describe("handleAddCustomer", () => {
   it("throws 500 with DATABASE_QUERY_FAILED on DB error", async () => {
     mockInsertThrow(new Error("DB down"));
 
-    const p = handleAddCustomer({ name: "" } as CustomerType);
+    const p = handleAddCustomer({ name: "" } as CustomerInsertType);
     await expect(p).rejects.toMatchObject({
       status: 500,
       message: ERROR_MESSAGES.DATABASE_QUERY_FAILED,

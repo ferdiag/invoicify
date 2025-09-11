@@ -1,7 +1,8 @@
-import { db } from "./client"; // deine Drizzle-Verbindung
+import { db } from "./client";
 import { users, customers, invoices } from "./schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
+import type { InvoiceInsertType } from "../types/database.type";
 
 async function main() {
   console.log("seeding database");
@@ -12,7 +13,6 @@ async function main() {
   const [user] = await db
     .insert(users)
     .values({
-      id: randomUUID(),
       email: "seed@example.com",
       password: hashedPassword,
       phone: "+49 170 1234567",
@@ -24,12 +24,11 @@ async function main() {
     })
     .returning();
 
-  console.log("new User", user.email, "example password", user.password);
+  console.log("new User", user.email, "example password", password);
 
   const [customer] = await db
     .insert(customers)
     .values({
-      id: randomUUID(),
       name: "success GmbH",
       contact: "Max Maier",
       email: "info@success.de",
@@ -41,32 +40,25 @@ async function main() {
       userId: user.id,
     })
     .returning();
-  console.log("new customer", customer);
-  await db.insert(invoices).values({
-    id: randomUUID(),
+  console.log(invoices, randomUUID, customer);
+
+  const invoice: InvoiceInsertType = {
     customerId: customer.id,
     name: "Rechnung #1001",
     userId: user.id,
     invoiceDate: "2025-09-08",
     dueDate: "2025-09-30",
     vat: 19,
-    netAmount: "100.00",
-    grossAmount: "119.00",
+    netAmount: 100.15,
+    grossAmount: 119.68,
     products: [
-      {
-        id: randomUUID(),
-        name: "Beratungsleistung",
-        quantity: 10,
-        price: 10.0,
-      },
-      {
-        id: randomUUID(),
-        name: "Softwarelizenz",
-        quantity: 1,
-        price: 0.0,
-      },
+      { id: randomUUID(), name: "Beratungsleistung", quantity: 10, price: 10 },
+      { id: randomUUID(), name: "Softwarelizenz", quantity: 1, price: 0 },
     ],
-  });
+  };
+
+  await db.insert(invoices).values(invoice);
+
   process.exit(0);
 }
 

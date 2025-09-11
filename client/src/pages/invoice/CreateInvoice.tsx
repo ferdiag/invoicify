@@ -45,7 +45,7 @@ const CreateInvoice: React.FC = () => {
       products: cleanedProducts,
     };
     let hasEmptyField = false;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     Object.entries(payload).forEach(([_, value]) => {
       if (value === "" || value === null || value === undefined) {
         console.log("Empty field found:", _);

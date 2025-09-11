@@ -5,6 +5,7 @@ import { db } from "../../db/client";
 import { users } from "../../db/schema";
 import { UserInsertType } from "../../types/database.type";
 import { MESSAGES } from "../../constants/successMessages";
+import { DatabaseError } from "pg";
 
 export const handleRegister = async (data: UserInsertType) => {
   const { email, password } = data;
@@ -18,11 +19,14 @@ export const handleRegister = async (data: UserInsertType) => {
   try {
     await db.insert(users).values(newUser);
   } catch (err: unknown) {
-    const e = err as { code?: string };
-    if (e.code === "23505") {
+    if (
+      (err instanceof DatabaseError && err.code === "23505") ||
+      (err instanceof Error && /duplicate key value/.test(err.toString()))
+    ) {
       throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
     }
-    throw createError.BadGateway(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
+
+    throw createError.InternalServerError(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 
   return {
