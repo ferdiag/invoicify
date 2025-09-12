@@ -3,7 +3,7 @@
 FROM node:20-alpine AS deps
 
 WORKDIR /app
-COPY  package*.json ./  
+COPY  server/package*.json ./  
 
 RUN npm ci
 
@@ -12,8 +12,9 @@ From node:20-alpine
 WORKDIR /app 
 
 COPY  --from=deps /app/node_modules ./node_modules
-COPY . .
 
+COPY ./server .
+COPY shared ./shared
 EXPOSE 3000
 
 CMD [ "npm", "run","dev" ]

@@ -12,7 +12,7 @@ import { AuthSchema } from "../zod/auth.schema";
 import { CustomerInsertSchema, CustomerPatchSchema, IdParamSchema } from "../zod/customer.schema";
 import { UserPatchSchema } from "../zod/user.schema";
 import { InvoiceInsertSchema } from "../zod/invoice.schema";
-import { PATHS } from "../../../shared/paths.js";
+import { PATHS } from "@/paths";
 import { TAGS, HTTP, RESPONSES, SUMMARIES } from "../constants/api";
 
 export const routes: FastifyPluginAsyncZod = async (fastify) => {

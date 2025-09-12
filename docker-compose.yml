@@ -14,12 +14,14 @@ services:
   server:
     build:
       context: .
+      dockerfile: server/Dockerfile.dev
     ports: 
       - "3000:3000"
     env_file:
       - ./server/.env
     volumes:
-      - .:/app
+      - ./server:/app
+      - ./shared:/shared
       - /app/node_modules
     depends_on:
       - db
