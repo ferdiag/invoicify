@@ -11,6 +11,18 @@ services:
       POSTGRES_DB: invoicify
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  server:
+    build:
+      context: .
+    ports: 
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
 
 volumes:
   postgres_data:

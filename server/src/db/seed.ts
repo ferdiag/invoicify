@@ -24,8 +24,6 @@ async function main() {
     })
     .returning();
 
-  console.log("new User", user.email, "example password", password);
-
   const [customer] = await db
     .insert(customers)
     .values({
@@ -40,7 +38,6 @@ async function main() {
       userId: user.id,
     })
     .returning();
-  console.log(invoices, randomUUID, customer);
 
   const invoice: InvoiceInsertType = {
     customerId: customer.id,
