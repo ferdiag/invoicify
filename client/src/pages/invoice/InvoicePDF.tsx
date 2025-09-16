@@ -1,5 +1,4 @@
-import React from "react";
-import { useUserStore } from "../../store/userStore";
+import { useUserStore } from '../../store/userStore';
 
 const InvoicePDF = () => {
   const { invoiceData } = useUserStore();

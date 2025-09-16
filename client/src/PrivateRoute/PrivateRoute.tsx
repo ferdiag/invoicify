@@ -1,5 +1,5 @@
-import { useUserStore } from "../store/userStore";
-import { Navigate, Outlet } from "react-router-dom";
+import { useUserStore } from '../store/userStore';
+import { Navigate, Outlet } from 'react-router-dom';
 
 const IsAuthenticated = () => {
   const { token } = useUserStore();

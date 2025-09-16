@@ -1,34 +1,34 @@
-import { lazy } from "react";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import React, { lazy } from 'react';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
-import Layout from "./components/Layout";
-import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import Layout from './components/Layout/Layout';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 
-const Auth = lazy(() => import("./pages/Auth"));
-const Home = lazy(() => import("./pages/Home"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const AddCompanyData = lazy(() => import("./pages/EditCompanyData"));
-const CreateInvoice = lazy(() => import("./pages/invoice/CreateInvoice"));
-const CustomersPage = lazy(() => import("./pages/CustomersPage"));
-const CustomerDetail = lazy(() => import("./pages/CustomerDetail"));
-const Invoices = lazy(() => import("./pages/invoice/Invoices"));
-const InvoiceDetail = lazy(() => import("./pages/invoice/InvoiceDetail"));
+const Auth = lazy(() => import('./pages/Auth/Auth'));
+const Home = lazy(() => import('./pages/Home'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const AddCompanyData = lazy(() => import('./pages/EditCompanyData'));
+const CreateInvoice = lazy(() => import('./pages/invoice/CreateInvoice/CreateInvoice'));
+const CustomersPage = lazy(() => import('./pages/CustomersPage'));
+const CustomerDetail = lazy(() => import('./pages/CustomerDetail'));
+const Invoices = lazy(() => import('./pages/invoice/Invoices'));
+const InvoiceDetail = lazy(() => import('./pages/invoice/InvoiceDetail'));
 
 const privateRoutes = [
-  { path: "/dashboard", element: <Dashboard /> },
-  { path: "/customer/:id", element: <CustomerDetail /> },
-  { path: "/invoices/:id", element: <InvoiceDetail /> },
+  { path: '/dashboard', element: <Dashboard /> },
+  { path: '/customer/:id', element: <CustomerDetail /> },
+  { path: '/invoices/:id', element: <InvoiceDetail /> },
 
-  { path: "/add-customer", element: <CustomerDetail /> },
-  { path: "/invoices", element: <Invoices /> },
+  { path: '/add-customer', element: <CustomerDetail /> },
+  { path: '/invoices', element: <Invoices /> },
 
-  { path: "/add-data", element: <AddCompanyData /> },
+  { path: '/add-data', element: <AddCompanyData /> },
   {
-    path: "/create-invoice",
+    path: '/create-invoice',
     element: <CreateInvoice />,
   },
-  { path: "/customers", element: <CustomersPage /> },
+  { path: '/customers', element: <CustomersPage /> },
 ];
 
 function App() {
@@ -40,11 +40,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route element={<PrivateRoute />}>
             {privateRoutes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={route.element}
-              />
+              <Route key={route.path} path={route.path} element={route.element} />
             ))}
           </Route>
           {/* <Route path="*" element={<Navigate to="/" replace />} /> */}

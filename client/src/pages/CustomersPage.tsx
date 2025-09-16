@@ -1,10 +1,10 @@
-import React from "react";
-import { useUserStore } from "../store/userStore";
-import CTAButton from "../components/Button/Button";
-import { t } from "i18next";
-import { useNavigate } from "react-router-dom";
-import { api } from "../lib/api";
-import { PATHS } from "../../../shared/paths";
+import React from 'react';
+import { useUserStore } from '../store/userStore';
+import CTAButton from '../components/Button/Button';
+import { t } from 'i18next';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api';
+import { PATHS } from '../../../shared/paths';
 
 const CustomersPage: React.FC = () => {
   const { user, deleteCustomer } = useUserStore();
@@ -15,27 +15,22 @@ const CustomersPage: React.FC = () => {
     if (response.status === 200) {
       deleteCustomer(id);
     } else {
-      console.error("Failed to delete customer");
+      console.error('Failed to delete customer');
     }
   };
   return (
     <div className="flex flex-col gap-4">
-      <CTAButton onClick={() => navigate("/add-customer")}>
-        {t("buttons.toAddCustomer")}
+      <CTAButton onClick={() => void navigate('/add-customer')}>
+        {t('buttons.toAddCustomer')}
       </CTAButton>
       {user!.customers.map((customer) => (
-        <div key={customer.id!} className="flex flex-col gap-2">
+        <div key={customer.id} className="flex flex-col gap-2">
           <div className="font-bold">{customer.name}</div>
-          <CTAButton
-            onClick={async () => navigate(`/customer/${customer.id!}`)}
-          >
-            {t("buttons.edit")}
+          <CTAButton onClick={() => void navigate(`/customer/${customer.id}`)}>
+            {t('buttons.edit')}
           </CTAButton>
-          <CTAButton
-            onClick={() => handleDeleteCustomer(customer.id!)}
-            variant="danger"
-          >
-            {t("buttons.delete")}
+          <CTAButton onClick={() => void handleDeleteCustomer(customer.id)} variant="danger">
+            {t('buttons.delete')}
           </CTAButton>
         </div>
       ))}

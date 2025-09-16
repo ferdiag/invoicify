@@ -1,14 +1,14 @@
-import type { TFunction } from "i18next";
-import type { NavigateFunction } from "react-router-dom";
+import type { TFunction } from 'i18next';
+import type { NavigateFunction } from 'react-router-dom';
 
-export type ProductBase = {
+export interface ProductBase {
   name: string;
   quantity: number;
   price: number;
-};
+}
 export type ProductWithId = ProductBase & { id: string };
 
-export type Customer = {
+export interface Customer {
   id: string;
   name: string;
   contact: string;
@@ -18,7 +18,7 @@ export type Customer = {
   city: string;
   zip: string;
   country: string;
-};
+}
 
 export type CustomerCreate = Customer & {
   userId: string;
@@ -31,7 +31,7 @@ export type CustomerUpdate = Partial<Customer> & {
 export type CreateCustomerResponse = { id: string } | Customer;
 export type UpdateCustomerResponse = Customer;
 
-export type Invoice = {
+export interface Invoice {
   id: string;
   name: string;
   customerId: string;
@@ -42,9 +42,31 @@ export type Invoice = {
   netAmount: string;
   grossAmount: string;
   products: ProductWithId[];
-};
-
-export type User = {
+}
+export interface Field {
+  id: string;
+  label: string;
+  placeholder?: string;
+  value: string;
+}
+export interface FormField {
+  id: string;
+  label: string;
+  placeholder: string;
+  value: string;
+}
+export interface DynamicFormProps<T extends Record<string, unknown>> {
+  title?: string;
+  fields: Field[];
+  setState: React.Dispatch<React.SetStateAction<T>>;
+  onSubmit: () => void;
+  submitLabel: string;
+}
+export interface AuthData {
+  email: string;
+  password: string;
+}
+export interface User {
   id: string;
   email: string;
   name: string;
@@ -57,9 +79,9 @@ export type User = {
   customers: Customer[];
   invoices: Invoice[];
   taxNumber: string;
-};
+}
 
-export type InvoiceData = {
+export interface InvoiceData {
   customerId: string;
   products: { name: string; quantity: number; price: number; id: string }[];
   vat: number;
@@ -67,52 +89,49 @@ export type InvoiceData = {
   dueDate: string;
   netAmount: number;
   grossAmount: number;
-};
+}
 
-export type State = {
+export interface State {
   token: string | null;
   user: User | null;
   invoiceData: InvoiceData;
-};
+}
 
-export type ProductChange = {
+export interface ProductChange {
   id: string;
   field: string;
   value: string;
-};
+}
 
-export type UpdateProducts = {
+export interface UpdateProducts {
   id: string;
   field: string;
   value: string | number;
   set: (partial: Partial<State>) => void;
   invoice: InvoiceData;
-};
+}
 
-export type Actions = {
+export interface Actions {
   logout: () => void;
   setToken: (token: string) => void;
   deleteCustomer: (id: string) => void;
   loginSuccess: (
     data: { user: User; token: string },
     message: string,
-    navigate: NavigateFunction
+    navigate: NavigateFunction,
   ) => void;
   registerSuccess: (
     reset: () => void,
     message: string,
-    setMode: React.Dispatch<React.SetStateAction<"login" | "register">>
+    setMode: React.Dispatch<React.SetStateAction<'login' | 'register'>>,
   ) => void;
 
-  handleApiError: (
-    error: unknown,
-    t: TFunction<"translation", undefined>
-  ) => void;
+  handleApiError: (error: unknown, t: TFunction<'translation', undefined>) => void;
 
   editCompanyDataSuccess: (
     newUser: Partial<User>,
     navigate: NavigateFunction,
-    t: TFunction<"translation", undefined>
+    t: TFunction<'translation', undefined>,
   ) => void;
 
   updateCustomerSuccess: (data: Customer) => void;
@@ -120,11 +139,11 @@ export type Actions = {
   handleAddProduct: () => void;
   handleRemoveProduct: (id: string) => void;
   handleVatChange: (value: string) => void;
-  handleDateChange: (field: "invoiceDate" | "dueDate", value: string) => void;
+  handleDateChange: (field: 'invoiceDate' | 'dueDate', value: string) => void;
 
   handleProductChange: ({ id, field, value }: ProductChange) => void;
   handleCustomerChange: (value: string) => void;
   handleCalculateTaxAndPrice: () => void;
   handlePriceChange: ({ id, field, value }: ProductChange) => string;
   handleQuantityChange: ({ id, field, value }: ProductChange) => void;
-};
+}

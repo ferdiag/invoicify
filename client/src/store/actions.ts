@@ -1,19 +1,10 @@
 // actions.ts
-import { toast } from "react-toastify";
-import axios from "axios";
-import type {
-  State,
-  Actions,
-  Customer,
-  UpdateProducts,
-  ProductWithId,
-} from "./types";
-import { t } from "i18next";
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import type { State, Actions, Customer, UpdateProducts, ProductWithId } from './types';
+import { t } from 'i18next';
 
-export const actions = (
-  set: (partial: Partial<State>) => void,
-  get: () => State
-): Actions => ({
+export const actions = (set: (partial: Partial<State>) => void, get: () => State): Actions => ({
   logout: () => set({ user: null, token: null }),
   setToken: (token) => {
     set({ token });
@@ -29,36 +20,35 @@ export const actions = (
     });
   },
 
-  loginSuccess: (data, message, navigate) => {
-    toast.success(message, { position: "bottom-center" });
+  loginSuccess: (data, message, navigate): void => {
+    toast.success(message, { position: 'bottom-center' });
     set({ user: data.user, token: data.token });
-    console.log(data);
-    navigate("/dashboard");
+
+    void navigate('/dashboard');
   },
 
   registerSuccess: (reset, message, setMode) => {
     reset();
     toast.success(message);
-    setMode("login");
+    setMode('login');
   },
   //todo den Fehler in verschiedenen Sprachen ausgeben
   handleApiError: (error, t) => {
     let msg = undefined;
 
     if (axios.isAxiosError(error)) {
-      msg = error.response?.data?.message
-        ? error.response?.data?.message
-        : t("auth.defaultError");
+      const responseData = error.response?.data as { message?: string } | undefined;
+      msg = responseData?.message ?? t('auth.defaultError');
     }
-    toast.error(msg, { position: "bottom-center" });
+    toast.error(msg, { position: 'bottom-center' });
   },
 
   editCompanyDataSuccess: (newUser, navigate, t) => {
     const { user } = get();
     if (!user) return;
     set({ user: { ...user, ...newUser } });
-    navigate("/dashboard");
-    toast.success(t("addCompanyData.Success"));
+    void navigate('/dashboard');
+    toast.success(t('addCompanyData.Success'));
   },
   updateCustomerSuccess: (data: Customer) => {
     const { user } = get();
@@ -67,24 +57,24 @@ export const actions = (
         user: {
           ...user,
           customers: user.customers.map((cust) =>
-            cust.id === data.id ? { ...cust, ...data } : cust
+            cust.id === data.id ? { ...cust, ...data } : cust,
           ),
         },
       });
-      toast.success(t("CustomerDetail.edit"));
+      toast.success(t('CustomerDetail.edit'));
     }
   },
   addCustomerSuccess: (data: Customer) => {
     const { user } = get();
     if (user) {
       set({ user: { ...user, customers: [...user.customers, data] } });
-      toast.success(t("addCustomer.addSuccess"));
+      toast.success(t('addCustomer.addSuccess'));
     }
   },
   handleAddProduct: () => {
     const defaultProduct = {
       id: crypto.randomUUID().toString(),
-      name: "",
+      name: '',
       quantity: 1,
       price: 0,
     };
@@ -129,9 +119,9 @@ export const actions = (
   handlePriceChange: ({ id, field, value }) => {
     const { invoiceData } = get();
     const sanitized = value
-      .replace(",", ".")
-      .replace(/[^0-9.]/g, "")
-      .replace(/^(\d*\.\d{0,2}).*$/, "$1");
+      .replace(',', '.')
+      .replace(/[^0-9.]/g, '')
+      .replace(/^(\d*\.\d{0,2}).*$/, '$1');
     const parsed = parseFloat(sanitized) || 0.0;
     console.log(typeof parsed);
     updateProducts({ id, field, value, set, invoice: invoiceData });
@@ -159,7 +149,7 @@ export const actions = (
     const round2 = (n: number) => Math.round(n * 100) / 100;
 
     const netAmount = round2(
-      invoiceData.products.reduce((sum, p) => sum + p.quantity * p.price, 0)
+      invoiceData.products.reduce((sum, p) => sum + p.quantity * p.price, 0),
     );
     console.log(invoiceData, netAmount);
     const grossAmount = round2(netAmount * (1 + invoiceData.vat / 100));
@@ -170,7 +160,7 @@ export const actions = (
 
 const updateProducts = ({ id, field, value, set, invoice }: UpdateProducts) => {
   const updatedProducts = invoice.products.map((prod: ProductWithId) =>
-    prod.id === id ? { ...prod, [field]: value } : prod
+    prod.id === id ? { ...prod, [field]: value } : prod,
   );
   set({
     invoiceData: {

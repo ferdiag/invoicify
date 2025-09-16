@@ -1,9 +1,9 @@
-import axios from "axios";
-const url = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+import axios from 'axios';
+const url = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 const api = axios.create({
   baseURL: url,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 export { api };

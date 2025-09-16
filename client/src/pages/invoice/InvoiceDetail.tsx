@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
-import { t } from "i18next";
-import { useUserStore } from "../../store/userStore";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { t } from 'i18next';
+import { useUserStore } from '../../store/userStore';
 
 const InvoiceDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,7 +11,7 @@ const InvoiceDetail = () => {
   if (!invoice) {
     return (
       <div className="text-center text-red-500 mt-10">
-        {t("invoice.notFound") || "Rechnung nicht gefunden"}
+        {t('invoice.notFound') || 'Rechnung nicht gefunden'}
       </div>
     );
   }
@@ -21,42 +22,32 @@ const InvoiceDetail = () => {
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <p className="text-gray-400">
-            {t("invoice.invoiceDate") || "Rechnungsdatum"}
-          </p>
+          <p className="text-gray-400">{t('invoice.invoiceDate') || 'Rechnungsdatum'}</p>
           <p>{invoice.invoiceDate}</p>
         </div>
         <div>
-          <p className="text-gray-400">{t("invoice.dueDate") || "Fällig am"}</p>
+          <p className="text-gray-400">{t('invoice.dueDate') || 'Fällig am'}</p>
           <p>{invoice.dueDate}</p>
         </div>
         <div>
-          <p className="text-gray-400">
-            {t("invoice.grossAmount") || "Bruttobetrag"}
-          </p>
+          <p className="text-gray-400">{t('invoice.grossAmount') || 'Bruttobetrag'}</p>
           <p>{parseFloat(invoice.grossAmount).toFixed(2)} €</p>
         </div>
         <div>
-          <p className="text-gray-400">
-            {t("invoice.netAmount") || "Nettobetrag"}
-          </p>
+          <p className="text-gray-400">{t('invoice.netAmount') || 'Nettobetrag'}</p>
           <p>{parseFloat(invoice.netAmount).toFixed(2)} €</p>
         </div>
         <div>
-          <p className="text-gray-400">{t("invoice.vat") || "Umsatzsteuer"}</p>
+          <p className="text-gray-400">{t('invoice.vat') || 'Umsatzsteuer'}</p>
           <p>{invoice.vat} %</p>
         </div>
         <div>
-          <p className="text-gray-400">
-            {t("invoice.customerId") || "Kunde-ID"}
-          </p>
+          <p className="text-gray-400">{t('invoice.customerId') || 'Kunde-ID'}</p>
           <p className="truncate">{invoice.customerId}</p>
         </div>
       </div>
 
-      <h2 className="text-xl font-semibold mb-4">
-        {t("invoice.products") || "Produkte"}
-      </h2>
+      <h2 className="text-xl font-semibold mb-4">{t('invoice.products') || 'Produkte'}</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-gray-700 rounded">
           <thead className="text-sm uppercase bg-gray-600 text-gray-300">
@@ -69,13 +60,10 @@ const InvoiceDetail = () => {
           </thead>
           <tbody>
             {invoice.products.map((product, idx) => (
-              <tr
-                key={idx}
-                className="border-t border-gray-600 hover:bg-gray-600"
-              >
+              <tr key={idx} className="border-t border-gray-600 hover:bg-gray-600">
                 <td className="px-4 py-2">{product.name}</td>
                 <td className="px-4 py-2">{product.quantity}</td>
-                {Number(product.price).toFixed(2)} €{" "}
+                {Number(product.price).toFixed(2)} €{' '}
                 <td className="px-4 py-2">
                   {(Number(product.price) * product.quantity).toFixed(2)} €
                 </td>

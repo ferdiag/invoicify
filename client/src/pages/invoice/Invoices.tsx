@@ -1,9 +1,9 @@
-import React from "react";
-import { useUserStore } from "../../store/userStore";
-import CTAButton from "../../components/Button/Button";
-import { useNavigate } from "react-router-dom";
-import { t } from "i18next";
-import { DisplayInvoices } from "../../components/DisplayInvoices";
+import React from 'react';
+import { useUserStore } from '../../store/userStore';
+import CTAButton from '../../components/Button/Button';
+import { useNavigate } from 'react-router-dom';
+import { t } from 'i18next';
+import { DisplayInvoices } from '../../components/DisplayInvoices/DisplayInvoices';
 
 const Invoices = () => {
   const { user } = useUserStore();
@@ -11,11 +11,11 @@ const Invoices = () => {
 
   return (
     <div>
-      {" "}
-      <CTAButton onClick={() => navigate("/create-invoice")}>
-        {t("buttons.createInvoice")}
+      {' '}
+      <CTAButton onClick={() => void navigate('/create-invoice')}>
+        {t('buttons.createInvoice')}
       </CTAButton>
-      <DisplayInvoices invoices={user!.invoices} />{" "}
+      <DisplayInvoices invoices={user!.invoices} />{' '}
     </div>
   );
 };
