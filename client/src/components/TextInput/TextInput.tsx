@@ -1,13 +1,14 @@
-import React from "react";
+// TextInput.tsx
+import React from 'react';
 
-type InputProps = {
+interface InputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   id: string;
-};
+}
 
-const Input = (props: InputProps) => {
+const TextInput = (props: InputProps) => {
   return (
     <input
       type="text"
@@ -20,4 +21,4 @@ const Input = (props: InputProps) => {
   );
 };
 
-export default Input;
+export default TextInput;

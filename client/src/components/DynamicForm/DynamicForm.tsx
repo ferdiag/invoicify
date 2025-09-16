@@ -1,21 +1,7 @@
-import React from "react";
-import CTAButton from "./Button/Button";
-import Input from "./Input";
-
-type Field = {
-  id: string;
-  label: string;
-  placeholder?: string;
-  value: string;
-};
-
-type DynamicFormProps<T extends Record<string, unknown>> = {
-  title?: string;
-  fields: Array<Field>;
-  setState: React.Dispatch<React.SetStateAction<T>>;
-  onSubmit: () => void;
-  submitLabel: string;
-};
+import React from 'react';
+import CTAButton from '../Button/Button';
+import Input from '../TextInput/TextInput';
+import type { DynamicFormProps } from '../../store/types';
 
 const DynamicForm = <T extends Record<string, unknown>>({
   title,
@@ -26,22 +12,17 @@ const DynamicForm = <T extends Record<string, unknown>>({
 }: DynamicFormProps<T>) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setState((prev) => ({ ...prev, [id as keyof T]: value } as T));
+    setState((prev) => ({ ...prev, [id as keyof T]: value }) as T);
   };
 
   return (
     <div className="flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-lg">
-        {title && (
-          <h2 className="text-2xl font-bold mb-6 text-white">{title}</h2>
-        )}
+        {title && <h2 className="text-2xl font-bold mb-6 text-white">{title}</h2>}
         <div className="space-y-4">
           {fields.map((field) => (
             <div key={field.id}>
-              <label
-                htmlFor={field.id}
-                className="block mb-1 text-sm text-gray-300"
-              >
+              <label htmlFor={field.id} className="block mb-1 text-sm text-gray-300">
                 {field.label}
               </label>
               <Input

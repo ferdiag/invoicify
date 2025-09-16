@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../store/userStore";
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../store/userStore';
 
 const Navbar = () => {
   const { user } = useUserStore(); // Zugriff auf den eingeloggten User
   const navigate = useNavigate();
 
   const pages = [
-    { name: "Home", path: "/" },
-    { name: "Auth", path: "/auth", hiddenIfLoggedIn: true },
-    { name: "Dashboard", path: "/dashboard", hiddenIfLoggedOut: true },
+    { name: 'Home', path: '/' },
+    { name: 'Auth', path: '/auth', hiddenIfLoggedIn: true },
+    { name: 'Dashboard', path: '/dashboard', hiddenIfLoggedOut: true },
   ];
 
   const visiblePages = pages.filter((page) => {
@@ -23,7 +23,7 @@ const Navbar = () => {
         <a
           onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
-            navigate(page.path);
+            void navigate(page.path);
           }}
           key={page.name}
           href={page.path}

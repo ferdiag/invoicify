@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useUserStore } from "../../store/userStore";
-import type { Customer, ProductWithId } from "../../store/types";
-import { api } from "../../lib/api";
-import { PATHS } from "../../../../shared/paths";
-import { toApi } from "../../lib/toApi";
-import { toast } from "react-toastify";
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { toast } from 'react-toastify';
+import { useUserStore } from '../../../store/userStore';
+import type { Customer, ProductWithId } from '../../../store/types';
+import { toApi } from '../../../lib/toApi';
+import { PATHS } from '../../../../../shared/paths';
+import { api } from '../../../lib/api';
 
 const CreateInvoice: React.FC = () => {
   const {
@@ -30,50 +31,52 @@ const CreateInvoice: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const customerName = user?.customers.find(
-      (cust: Customer) => cust.id === invoiceData.customerId
+      (cust: Customer) => cust.id === invoiceData.customerId,
     )?.name;
 
     const path = toApi(PATHS.INVOICES.ROOT);
 
-    const cleanedProducts = invoiceData.products
-      .map((p) => ({ ...p, name: p.name.trim() }))
-      .filter((p) => p.name.length > 0 && Number(p.quantity) > 0);
+    const cleanedProducts = invoiceData.products.map((p) => ({ ...p, name: p.name.trim() }));
+
     const payload = {
       ...invoiceData,
       userId: user?.id,
       name: customerName,
       products: cleanedProducts,
     };
-    let hasEmptyField = false;
+    let isFieldEmpty = false;
+
+    isFieldEmpty = cleanedProducts.some(
+      (p) => !p.name || Number(p.quantity) <= 0 || Number(p.price) <= 0,
+    );
 
     Object.entries(payload).forEach(([_, value]) => {
-      if (value === "" || value === null || value === undefined) {
-        console.log("Empty field found:", _);
-        hasEmptyField = true;
+      if (value === '' || value === null || value === undefined) {
+        console.log('Empty field found:', _);
+        isFieldEmpty = true;
         return;
       }
     });
-    if (hasEmptyField) {
-      toast.error(t("invoice.fillAllFields"));
+    if (isFieldEmpty) {
+      toast.error(t('invoice.fillAllFields'));
       return;
     }
-    const response = await api.post(path, payload);
-    if ([200, 201].includes(response.status)) {
-      toast.success(t("invoice.createSuccess"));
-      window.open(
-        `http://localhost:3000/invoices/${response.data.id}/pdf`,
-        "_blank",
-        "noopener"
-      );
+    try {
+      const response: { status: number; data: { id: string } } = await api.post(path, payload);
+      if ([200, 201].includes(response.status)) {
+        toast.success(t('invoice.createSuccess'));
+        window.open(`http://localhost:3000/invoices/${response.data.id}/pdf`, '_blank', 'noopener');
+      }
+    } catch {
+      toast.error(t('invoice.createError'));
     }
-    console.log(response);
   };
   return (
     <div>
-      <h1>{t("invoice.createTitle")}</h1>
-      <form onSubmit={handleSubmit}>
+      <h1>{t('invoice.createTitle')}</h1>
+      <form onSubmit={(e) => void handleSubmit(e)}>
         <label htmlFor="customer" className="block text-sm text-gray-300 mb-1">
-          {t("invoice.selectCustomer")}
+          {t('invoice.selectCustomer')}
         </label>
         <select
           id="customer"
@@ -81,7 +84,7 @@ const CreateInvoice: React.FC = () => {
           onChange={(e) => handleCustomerChange(e.target.value)}
           className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600"
         >
-          <option value="">{t("invoice.selectCustomerPlaceholder")}</option>
+          <option value="">{t('invoice.selectCustomerPlaceholder')}</option>
           {user?.customers.map((customer: Customer) => (
             <option key={customer.id} value={customer.id}>
               {customer.name} ({customer.contact})
@@ -90,17 +93,13 @@ const CreateInvoice: React.FC = () => {
         </select>
 
         <div className="mt-4">
-          <label className="block text-sm text-gray-300 mb-1">
-            {t("invoice.products")}
-          </label>
+          <label className="block text-sm text-gray-300 mb-1">{t('invoice.products')}</label>
           <table className="w-full text-left mb-2">
             <thead>
               <tr>
-                <th className="px-2 py-1">{t("invoice.productName")}</th>
-                <th className="px-2 py-1 text-center">
-                  {t("invoice.quantity")}
-                </th>
-                <th className="px-2 py-1 text-center">{t("invoice.price")}</th>
+                <th className="px-2 py-1">{t('invoice.productName')}</th>
+                <th className="px-2 py-1 text-center">{t('invoice.quantity')}</th>
+                <th className="px-2 py-1 text-center">{t('invoice.price')}</th>
                 <th className="px-2 py-1"></th>
               </tr>
             </thead>
@@ -110,7 +109,7 @@ const CreateInvoice: React.FC = () => {
                   <td className="px-2 py-1">
                     <input
                       type="text"
-                      placeholder={t("invoice.productName")}
+                      placeholder={t('invoice.productName')}
                       value={product.name}
                       name="name"
                       onChange={(e) => {
@@ -127,7 +126,7 @@ const CreateInvoice: React.FC = () => {
                     <input
                       type="number"
                       min={1}
-                      placeholder={t("invoice.quantity")}
+                      placeholder={t('invoice.quantity')}
                       name="quantity"
                       value={product.quantity}
                       onChange={(e) =>
@@ -177,12 +176,12 @@ const CreateInvoice: React.FC = () => {
             onClick={() => handleAddProduct()}
             className="bg-blue-600 text-white px-4 py-1 rounded mt-2"
           >
-            {t("invoice.addProduct")}
+            {t('invoice.addProduct')}
           </button>
         </div>
 
         <div className="mt-4">
-          <label htmlFor="vat">{t("invoice.vat")}</label>
+          <label htmlFor="vat">{t('invoice.vat')}</label>
           <input
             type="number"
             id="vat"
@@ -196,44 +195,41 @@ const CreateInvoice: React.FC = () => {
 
         <div className="mt-4 flex gap-4">
           <div className="flex-1">
-            <label htmlFor="invoiceDate">{t("invoice.invoiceDate")}</label>
+            <label htmlFor="invoiceDate">{t('invoice.invoiceDate')}</label>
             <input
               type="date"
               id="invoiceDate"
               value={invoiceData.invoiceDate}
-              onChange={(e) => handleDateChange("invoiceDate", e.target.value)}
+              onChange={(e) => handleDateChange('invoiceDate', e.target.value)}
               className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full"
             />
           </div>
           <div className="flex-1">
-            <label htmlFor="dueDate">{t("invoice.dueDate")}</label>
+            <label htmlFor="dueDate">{t('invoice.dueDate')}</label>
             <input
               type="date"
               id="dueDate"
               value={invoiceData.dueDate}
-              onChange={(e) => handleDateChange("dueDate", e.target.value)}
+              onChange={(e) => handleDateChange('dueDate', e.target.value)}
               className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full"
             />
           </div>
         </div>
 
         <div className="mt-4">
-          <label>{t("invoice.netAmount")}</label>
+          <label>{t('invoice.netAmount')}</label>
           <div className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full">
             {invoiceData.netAmount.toFixed(2)}
           </div>
         </div>
         <div className="mt-2">
-          <label>{t("invoice.grossAmount")}</label>
+          <label>{t('invoice.grossAmount')}</label>
           <div className="p-2 rounded bg-gray-700 text-white border border-gray-600 w-full">
             {invoiceData.grossAmount.toFixed(2)}
           </div>
         </div>
-        <button
-          type="submit"
-          className="mt-4 bg-green-600 text-white px-4 py-2 rounded"
-        >
-          {t("invoice.create")}
+        <button type="submit" className="mt-4 bg-green-600 text-white px-4 py-2 rounded">
+          {t('invoice.create')}
         </button>
       </form>
     </div>
