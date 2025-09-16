@@ -1,6 +1,8 @@
 # Invoicify – Modern invoicing for freelancers and small businesses
 
-![Tests (server)](https://github.com/ferdiag/invoicify/actions/workflows/ci.yml/badge.svg?branch=main)
+![Backend CI](https://github.com/ferdiag/invoicify/actions/workflows/backend-ci.yml/badge.svg?branch=main)
+![Frontend CI](https://github.com/ferdiag/invoicify/actions/workflows/frontend-ci.yml/badge.svg?branch=main)
+
 ![License](https://img.shields.io/github/license/ferdiag/invoicify)
 
 Built with **React, TypeScript, Fastify, PostgreSQL, Drizzle ORM**.
