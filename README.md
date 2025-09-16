@@ -2,7 +2,7 @@
 
 ![Backend CI](https://github.com/ferdiag/invoicify/actions/workflows/backend-ci.yml/badge.svg?branch=main)
 ![Frontend CI](https://github.com/ferdiag/invoicify/actions/workflows/frontend-ci.yml/badge.svg?branch=main)
-
+![Coverage](https://img.shields.io/badge/coverage-29%25-red)
 ![License](https://img.shields.io/github/license/ferdiag/invoicify)
 
 Built with **React, TypeScript, Fastify, PostgreSQL, Drizzle ORM**.
@@ -95,7 +95,13 @@ invoicify/
 
     npm run test:ci generates a coverage report under /coverage (also uploaded as CI artifact + Codecov)
 
-🤝 Contributing
+    ## 🧪 Testing
+
+- [x] Setup CI pipelines (frontend & backend)
+- [x] Unit tests for core components
+- [ ] Add backend route tests
+- [ ] Increase frontend coverage to 80%+
+      🤝 Contributing
 
 Issues and pull requests are welcome!
 Please open an issue for bugs or feature requests.
