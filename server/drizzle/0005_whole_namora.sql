@@ -1,1 +1,0 @@
-ALTER TABLE "users" ADD COLUMN "taxNumber" varchar(15) DEFAULT '';

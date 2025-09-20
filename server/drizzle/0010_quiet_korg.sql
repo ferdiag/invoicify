@@ -1,1 +1,0 @@
-ALTER TABLE "invoices" ADD COLUMN "name" varchar NOT NULL;

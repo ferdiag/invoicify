@@ -1,8 +1,7 @@
 import { db } from "./client";
-import { users, customers, invoices } from "./schema";
+import { users, customers, invoices, invoiceItems } from "./schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
-import type { InvoiceInsertType } from "../types/database.type";
 
 async function main() {
   console.log("seeding database");
@@ -39,22 +38,38 @@ async function main() {
     })
     .returning();
 
-  const invoice: InvoiceInsertType = {
-    customerId: customer.id,
-    name: "Rechnung #1001",
-    userId: user.id,
-    invoiceDate: "2025-09-08",
-    dueDate: "2025-09-30",
-    vat: 19,
-    netAmount: 100.15,
-    grossAmount: 119.68,
-    products: [
-      { id: randomUUID(), name: "Beratungsleistung", quantity: 10, price: 10 },
-      { id: randomUUID(), name: "Softwarelizenz", quantity: 1, price: 0 },
-    ],
-  };
+  const [invoice] = await db
+    .insert(invoices)
+    .values({
+      id: randomUUID(),
+      customerId: customer.id,
+      name: "Rechnung #1001",
+      invoiceNumber: 1001,
+      userId: user.id,
+      invoiceDate: "2025-09-08",
+      dueDate: "2025-09-30",
+      vat: 19,
+      netAmount: 100.15,
+      grossAmount: 119.68,
+    })
+    .returning();
 
-  await db.insert(invoices).values(invoice);
+  await db.insert(invoiceItems).values([
+    {
+      id: randomUUID(),
+      invoiceId: invoice.id,
+      name: "Beratungsleistung",
+      unitPrice: 10,
+      quantity: 10,
+    },
+    {
+      id: randomUUID(),
+      invoiceId: invoice.id,
+      name: "Softwarelizenz",
+      unitPrice: 0,
+      quantity: 1,
+    },
+  ]);
 
   process.exit(0);
 }

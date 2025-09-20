@@ -1,1 +1,0 @@
-ALTER TABLE "customers" ADD COLUMN "contact" varchar(255) DEFAULT '';

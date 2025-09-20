@@ -23,6 +23,7 @@ services:
       - ./server:/app
       - ./shared:/shared
       - /app/node_modules
+    command: sh -lc "npm ci && npm run dev"
     depends_on:
       - db
 
