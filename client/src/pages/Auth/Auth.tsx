@@ -30,7 +30,9 @@ const Auth: React.FC = () => {
 
   const onSubmit = async (data: AuthData) => {
     try {
-      const res = await api.post(toApi(AUTH_ENDPOINT[mode]), data);
+      const path = toApi(AUTH_ENDPOINT[mode]);
+      console.log('Submitting to:', path, 'with data:', data);
+      const res = await api.post(path, data);
       const response = res.data as { user: User; token: string };
       if ([200, 201].includes(res.status)) {
         if (mode === 'login') {
@@ -63,7 +65,14 @@ const Auth: React.FC = () => {
           </CTAButton>
         </div>
 
-        <form onSubmit={() => void handleSubmit(onSubmit)} autoComplete="off" className="space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleSubmit(onSubmit)(e);
+          }}
+          autoComplete="off"
+          className="space-y-4"
+        >
           <input
             type="email"
             placeholder={t('auth.placeholders.email')}

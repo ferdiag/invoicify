@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import cors from "@fastify/cors";
+import fastifyCors from "@fastify/cors";
 import dotenv from "dotenv";
 import { z } from "zod";
 import {
@@ -19,7 +19,7 @@ dotenv.config();
 const app = Fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
 
 async function main() {
-  await app.register(cors, {
+  await app.register(fastifyCors, {
     origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
@@ -41,6 +41,7 @@ async function main() {
   await app.register(routes, { prefix: "/api" });
   app.register(pdfRoute);
   await registerErrorHandler(app);
+
   const EnvSchema = z.object({
     PORT: z.coerce.number().default(3000),
     HOST: z.string().default("0.0.0.0"),

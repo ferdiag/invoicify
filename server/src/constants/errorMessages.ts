@@ -1,6 +1,6 @@
 export const ERROR_MESSAGES = {
   EMAIL_OR_PASSWORD_REQUIRED: "Email und Passwort erforderlich",
-  EMAIL_EXISTS: "Diese E-Mail ist bereits registriert.",
+  EMAIL_EXISTS: "Diese E-Mail-Adresse existiert bereits",
   INVOICE_NOT_FOUND: "Rechnung wurde nicht gefunden.",
   INVALID_AMOUNT: "Der Betrag ist ungültig.",
   UNAUTHORIZED: "Nicht autorisiert.",
@@ -10,4 +10,8 @@ export const ERROR_MESSAGES = {
   NO_CUSTOMER_FOUND_DELETE: "Kein Kunde zum Löschen gefunden",
   NO_CUSTOMER_FOUND_UPDATE: "Kein Kunde zum updaten gefunden",
   INVALID_CUSTOMER_ID: "Invalid customer id",
-};
+  FOREIGN_KEY_VIOLATION: "Der referenzierte Datensatz existiert nicht",
+  REQUIRED_FIELD_MISSING: "Ein Pflichtfeld wurde nicht ausgefüllt",
+  INVALID_DATA_FORMAT: "Ungültiges Datenformat",
+  UNEXPECTED_DB_ERROR: "Ein unerwarteter Datenbankfehler ist aufgetreten",
+} as const;

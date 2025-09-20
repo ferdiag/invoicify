@@ -9,7 +9,7 @@ import createHttpError from "http-errors";
 
 export const handleLogin = async (data: UserInsertType) => {
   const { email, password } = data;
-
+  console.log("authData", email, password);
   let user: UserSelectType | undefined;
 
   try {
