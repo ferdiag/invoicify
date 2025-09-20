@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { t } from 'i18next';
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from '../../../store/userStore';
 
 const InvoiceDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,7 +63,7 @@ const InvoiceDetail = () => {
               <tr key={idx} className="border-t border-gray-600 hover:bg-gray-600">
                 <td className="px-4 py-2">{product.name}</td>
                 <td className="px-4 py-2">{product.quantity}</td>
-                {Number(product.price).toFixed(2)} €{' '}
+                <td className="px-4 py-2">{Number(product.price).toFixed(2)} €</td>
                 <td className="px-4 py-2">
                   {(Number(product.price) * product.quantity).toFixed(2)} €
                 </td>

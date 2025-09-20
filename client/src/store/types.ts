@@ -110,6 +110,7 @@ export interface UpdateProducts {
   set: (partial: Partial<State>) => void;
   invoice: InvoiceData;
 }
+export type UserStoreType = State & Actions;
 
 export interface Actions {
   logout: () => void;

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
-import * as Router from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
 import { DisplayInvoices } from './DisplayInvoices';
+import { useNavigateMock } from '../../test/setup';
 
 const mockInvoices = [
   {
@@ -33,20 +33,18 @@ describe('DisplayInvoices', () => {
 
   it('navigates to invoice detail on row click', async () => {
     const user = userEvent.setup();
-    const navigateMock = vi.fn();
-
-    (Router.useNavigate as unknown as ReturnType<typeof vi.fn>).mockReturnValue(navigateMock);
+    useNavigateMock.mockClear();
 
     render(<DisplayInvoices invoices={mockInvoices} />);
-
     await user.click(screen.getByText('Musterkunde').closest('tr')!);
 
-    expect(navigateMock).toHaveBeenCalledWith('/invoices/1');
+    expect(useNavigateMock).toHaveBeenCalledWith('/invoices/1');
   });
+
   it('formats grossAmount to 2 decimals + euro sign', () => {
     const invoices = [
       { ...mockInvoices[0], grossAmount: '10' },
-      { ...mockInvoices[1], grossAmount: '3.5' },
+      { ...mockInvoices[0], id: '2', grossAmount: '3.5' }, // Fix hier
     ];
     render(<DisplayInvoices invoices={invoices} />);
     expect(screen.getByText(/10\.00\s*€/)).toBeInTheDocument();

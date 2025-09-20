@@ -70,6 +70,7 @@ API → http://localhost:3000
 | POST   | /invoices      | Create invoice (net/gross) | ✓    |
 
 _(✓ = requires JWT authentication)_
+
 🛠️ Tech Stack
 
     Frontend: React, TypeScript, React Router, React Hook Form, Tailwind, i18next, React-Toastify

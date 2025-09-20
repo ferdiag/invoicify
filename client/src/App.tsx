@@ -13,7 +13,7 @@ const CreateInvoice = lazy(() => import('./pages/invoice/CreateInvoice/CreateInv
 const CustomersPage = lazy(() => import('./pages/CustomersPage'));
 const CustomerDetail = lazy(() => import('./pages/CustomerDetail'));
 const Invoices = lazy(() => import('./pages/invoice/Invoices'));
-const InvoiceDetail = lazy(() => import('./pages/invoice/InvoiceDetail'));
+const InvoiceDetail = lazy(() => import('./pages/invoice/InvoiceDetail/InvoiceDetail'));
 
 const privateRoutes = [
   { path: '/dashboard', element: <Dashboard /> },

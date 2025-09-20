@@ -3,11 +3,9 @@ import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
 import { states } from './states';
 import { actions } from './actions';
-import type { State, Actions } from './types';
+import type { State, Actions, UserStoreType } from './types';
 
-export type UserStore = State & Actions;
-
-export const useUserStore = create<UserStore>()(
+export const useUserStore = create<UserStoreType>()(
   combine<State, Actions>(states, (set, get) => ({
     ...actions(set, get),
   })),
