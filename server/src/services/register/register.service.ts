@@ -5,15 +5,11 @@ import { db } from "../../db/client";
 import { users } from "../../db/schema";
 import { UserInsertType } from "../../types/database.type";
 import { MESSAGES } from "../../constants/successMessages";
-import { DatabaseError } from "pg";
 
-function isDatabaseError(error: unknown): error is DatabaseError {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    typeof (error as { code?: unknown }).code === "string"
-  );
+function extractPgCode(err: unknown): string | undefined {
+  const e = err as { code?: unknown; cause?: { code?: unknown } };
+  const code = e?.code ?? e?.cause?.code;
+  return typeof code === "string" ? code : undefined;
 }
 export const handleRegister = async (data: UserInsertType) => {
   const { email, password } = data;
@@ -27,10 +23,9 @@ export const handleRegister = async (data: UserInsertType) => {
   try {
     await db.insert(users).values(newUser);
   } catch (err) {
-    const cause = (err as { cause?: unknown }).cause;
-
-    if (isDatabaseError(cause)) {
-      switch (cause.code) {
+    const code = extractPgCode(err);
+    if (code) {
+      switch (code) {
         case "23505":
           throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
         case "23503":
@@ -42,6 +37,12 @@ export const handleRegister = async (data: UserInsertType) => {
         default:
           throw createError.InternalServerError(ERROR_MESSAGES.UNEXPECTED_DB_ERROR);
       }
+    }
+
+    // Fallback: auf Message-Matching (z. B. Drizzle ohne code durchgereicht)
+    const msg = (err as Error)?.message ?? "";
+    if (msg.includes("duplicate key value") || msg.includes("unique constraint")) {
+      throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
     }
 
     throw createError.InternalServerError(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);

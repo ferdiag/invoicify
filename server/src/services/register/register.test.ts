@@ -29,7 +29,7 @@ describe("handleRegister", () => {
 
   it("creates user → returns message + email", async () => {
     const email = "max.mustermann@example.com";
-    const password = "SehrSicher!123";
+    const password = "superSicher!123";
 
     (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-123");
     mockInsertResolves();
@@ -62,9 +62,12 @@ describe("handleRegister", () => {
   it("duplicate email → 409 Conflict", async () => {
     const email = "erika.mustermann@example.org";
     const password = "NochSicherer!456";
-
+    mockInsertThrow(
+      Object.assign(new Error("duplicates key value violates unique constraint"), {
+        cause: { code: "23505" },
+      })
+    );
     (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-456");
-    mockInsertThrow(new Error("duplicate key value violates unique constraint"));
 
     const p = handleRegister({ email, password } as UserInsertType);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
