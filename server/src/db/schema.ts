@@ -1,7 +1,6 @@
 import { integer, numeric, pgTable, uuid, varchar, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-/* USERS */
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -15,7 +14,6 @@ export const users = pgTable("users", {
   taxNumber: varchar("taxNumber", { length: 15 }).default(""),
 });
 
-/* CUSTOMERS */
 export const customers = pgTable(
   "customers",
   {
@@ -46,7 +44,7 @@ export const products = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     name: varchar("name", { length: 255 }).notNull(),
-    unitPrice: numeric("unit_price", { precision: 10, scale: 2 }).notNull().$type<number>(),
+    price: numeric("unit_price", { precision: 10, scale: 2 }).notNull().$type<number>(),
   },
   (t) => ({
     byUserIdx: index("products_user_idx").on(t.userId),
@@ -86,7 +84,9 @@ export const invoiceItems = pgTable(
     invoiceId: uuid("invoice_id")
       .notNull()
       .references(() => invoices.id, { onDelete: "cascade" }),
-    productId: uuid("product_id").references(() => products.id, { onDelete: "set null" }),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
     name: varchar("name", { length: 255 }).notNull(),
     unitPrice: numeric("unit_price", { precision: 10, scale: 2 }).notNull().$type<number>(),
     quantity: integer("quantity").notNull(),
@@ -106,15 +106,18 @@ export const customersRelations = relations(customers, ({ one, many }) => ({
   user: one(users, { fields: [customers.userId], references: [users.id] }),
   invoices: many(invoices),
 }));
+
 export const invoicesRelations = relations(invoices, ({ one, many }) => ({
   user: one(users, { fields: [invoices.userId], references: [users.id] }),
   customer: one(customers, { fields: [invoices.customerId], references: [customers.id] }),
   items: many(invoiceItems),
 }));
+
 export const productsRelations = relations(products, ({ one, many }) => ({
   user: one(users, { fields: [products.userId], references: [users.id] }),
   invoiceItems: many(invoiceItems),
 }));
+
 export const invoiceItemsRelations = relations(invoiceItems, ({ one }) => ({
   invoice: one(invoices, { fields: [invoiceItems.invoiceId], references: [invoices.id] }),
   product: one(products, { fields: [invoiceItems.productId], references: [products.id] }),
