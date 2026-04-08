@@ -4,11 +4,13 @@ import { customers } from "../../db/schema";
 import { CustomerInsertType } from "../../types/database.type";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
+import { mapPostgresError } from "@/utils/mapPostgresError";
 
 type Updated = { id: string };
 class DrizzleCustomerRepository implements CustomerRepository {
+  constructor(private readonly dbClient: typeof db) {}
   public async update(id: string, body: Partial<CustomerInsertType>): Promise<Updated | undefined> {
-    const [updatedCustomer] = await db
+    const [updatedCustomer] = await this.dbClient
       .update(customers)
       .set(body)
       .where(eq(customers.id, id))
@@ -29,9 +31,9 @@ export class EditCustomerService {
   public async execute(id: string, body: Partial<CustomerInsertType>) {
     try {
       return await this.customerRepository.update(id, body);
-    } catch {
-      throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+    } catch (err: unknown) {
+      mapPostgresError(err);
     }
   }
 }
-export const editCustomerService = new EditCustomerService(new DrizzleCustomerRepository());
+export const editCustomerService = new EditCustomerService(new DrizzleCustomerRepository(db));

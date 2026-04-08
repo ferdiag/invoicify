@@ -22,8 +22,9 @@ export interface PasswordHasher {
 }
 
 class DrizzleRegisterUserRepository implements RegisterUserRepository {
+  public constructor(private readonly dbClient: typeof db) {}
   public async create(data: CreateUserInput): Promise<void> {
-    await db.insert(users).values(data);
+    await this.dbClient.insert(users).values(data);
   }
 }
 
@@ -94,6 +95,6 @@ export class RegisterService {
 }
 
 export const registerService = new RegisterService(
-  new DrizzleRegisterUserRepository(),
+  new DrizzleRegisterUserRepository(db),
   new BcryptPasswordHasher()
 );

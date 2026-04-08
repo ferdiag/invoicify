@@ -1,12 +1,12 @@
-import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { invoices } from "../../db/schema";
 import { InvoiceInsertType } from "../../types/database.type";
-import { ERROR_MESSAGES } from "../../constants/errorMessages";
+import { mapPostgresError } from "@/utils/mapPostgresError";
 
 class DrizzleAddInvoiceRepository {
+  constructor(private readonly dbClient: typeof db) {}
   public async add(data: InvoiceInsertType): Promise<{ id: string }> {
-    const [id] = await db.insert(invoices).values(data).returning({ id: invoices.id });
+    const [id] = await this.dbClient.insert(invoices).values(data).returning({ id: invoices.id });
     return id;
   }
 }
@@ -20,9 +20,9 @@ export class AddInvoiceService {
   public async execute(data: InvoiceInsertType): Promise<{ id: string }> {
     try {
       return await this.addInvoiceRepository.add(data);
-    } catch (_: unknown) {
-      throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+    } catch (err: unknown) {
+      mapPostgresError(err);
     }
   }
 }
-export const addInvoiceService = new AddInvoiceService(new DrizzleAddInvoiceRepository());
+export const addInvoiceService = new AddInvoiceService(new DrizzleAddInvoiceRepository(db));

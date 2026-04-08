@@ -11,6 +11,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
+import { mapPostgresError } from "@/utils/mapPostgresError";
 
 export type LoginInput = Pick<UserInsertType, "email" | "password">;
 
@@ -29,17 +30,18 @@ export interface TokenSigner {
 }
 
 class DrizzleLoginRepository implements LoginRepository {
+  constructor(private readonly dbClient: typeof db) {}
   public async findUserByEmail(email: string): Promise<UserSelectType | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
+    const [user] = await this.dbClient.select().from(users).where(eq(users.email, email));
     return user;
   }
 
   public async findCustomersByUserId(userId: string): Promise<CustomerSelectType[]> {
-    return db.select().from(customers).where(eq(customers.userId, userId));
+    return this.dbClient.select().from(customers).where(eq(customers.userId, userId));
   }
 
   public async findInvoicesByUserId(userId: string): Promise<InvoiceSelectType[]> {
-    return db.select().from(invoices).where(eq(invoices.userId, userId));
+    return this.dbClient.select().from(invoices).where(eq(invoices.userId, userId));
   }
 }
 
@@ -110,14 +112,15 @@ export class LoginService {
         this.loginRepository.findCustomersByUserId(userId),
         this.loginRepository.findInvoicesByUserId(userId),
       ]);
-    } catch {
-      throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+    } catch (err: unknown) {
+      mapPostgresError(err);
     }
   }
 }
 
-export const loginService = new LoginService(
-  new DrizzleLoginRepository(),
-  new BcryptPasswordComparator(),
-  new JwtTokenSigner(process.env.JWT_SECRET ?? "dev secret")
-);
+export const createLoginService = (deps: { jwtSecret: string; dbClient: typeof db }) =>
+  new LoginService(
+    new DrizzleLoginRepository(deps.dbClient),
+    new BcryptPasswordComparator(),
+    new JwtTokenSigner(deps.jwtSecret)
+  );

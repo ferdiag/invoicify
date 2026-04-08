@@ -1,12 +1,15 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db/client";
 import { customers } from "../../db/schema";
-import createHttpError, { HttpError } from "http-errors";
+import createHttpError from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
+import { mapPostgresError } from "@/utils/mapPostgresError";
 
 class DrizzleDeleteCustomerRepository implements DeleteCustomerRepository {
+  constructor(private readonly dbClient: typeof db) {}
+
   public async delete(id: string): Promise<{ id: string }> {
-    const rows = await db
+    const rows = await this.dbClient
       .delete(customers)
       .where(eq(customers.id, id))
       .returning({ id: customers.id });
@@ -29,19 +32,8 @@ export class DeleteCustomer {
     try {
       return await this.deleteCustomerRepository.delete(id);
     } catch (err: unknown) {
-      if (err instanceof HttpError || createHttpError.isHttpError(err)) {
-        throw err;
-      }
-
-      if (typeof err === "object" && err !== null && "code" in err) {
-        const code = (err as { code?: string }).code;
-        if (code === "22P02") {
-          throw new createHttpError.BadRequest(ERROR_MESSAGES.INVALID_CUSTOMER_ID);
-        }
-      }
-
-      throw new createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+      mapPostgresError(err);
     }
   }
 }
-export const deleteCustomerService = new DeleteCustomer(new DrizzleDeleteCustomerRepository());
+export const deleteCustomerService = new DeleteCustomer(new DrizzleDeleteCustomerRepository(db));

@@ -4,10 +4,12 @@ import { users } from "../../db/schema";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import createHttpError from "http-errors";
 import { UserInsertType } from "../../types/database.type";
+import { mapPostgresError } from "@/utils/mapPostgresError";
 
 class DrizzleCompanyRepository implements CompanyRepository {
+  constructor(private readonly dbClient: typeof db) {}
   public async update(id: string, body: Partial<UserInsertType>) {
-    const [updatedCompany] = await db
+    const [updatedCompany] = await this.dbClient
       .update(users)
       .set(body)
       .where(eq(users.id, id))
@@ -27,9 +29,9 @@ export class EditCompanyService {
   public async execute(id: string, body: Partial<UserInsertType>) {
     try {
       return await this.companyRepository.update(id, body);
-    } catch (_: unknown) {
-      throw createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+    } catch (err: unknown) {
+      mapPostgresError(err);
     }
   }
 }
-export const editCompanyService = new EditCompanyService(new DrizzleCompanyRepository());
+export const editCompanyService = new EditCompanyService(new DrizzleCompanyRepository(db));
