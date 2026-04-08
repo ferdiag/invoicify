@@ -92,7 +92,7 @@ invoicify/
 
     Seed script creates a demo user and sample customer/invoice
 
-    CI runs lint, typecheck, and tests (GitHub Actions)
+    CI is configured for manual runs via GitHub Actions (workflow_dispatch)
 
     npm run test:ci generates a coverage report under /coverage (also uploaded as CI artifact + Codecov)
 
