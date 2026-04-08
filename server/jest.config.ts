@@ -5,6 +5,10 @@ const config: Config = {
   testEnvironment: "node",
   roots: ["<rootDir>/src"],
   testMatch: ["**/?(*.)+(spec|test).ts"],
+  moduleNameMapper: {
+    "^@/paths$": "<rootDir>/../shared/paths.ts",
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
   moduleFileExtensions: ["ts", "js", "json"],
   clearMocks: true,
   transform: {
