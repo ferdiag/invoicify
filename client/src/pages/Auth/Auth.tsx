@@ -31,7 +31,6 @@ const Auth: React.FC = () => {
   const onSubmit = async (data: AuthData) => {
     try {
       const path = toApi(AUTH_ENDPOINT[mode]);
-      console.log('Submitting to:', path, 'with data:', data);
       const res = await api.post(path, data);
       const response = res.data as { user: User; token: string };
       if ([200, 201].includes(res.status)) {
@@ -42,7 +41,6 @@ const Auth: React.FC = () => {
         }
       }
     } catch (err: unknown) {
-      console.log(err);
       handleApiError(err, t);
     }
   };

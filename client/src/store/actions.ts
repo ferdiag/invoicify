@@ -123,7 +123,6 @@ export const actions = (set: (partial: Partial<State>) => void, get: () => State
       .replace(/[^0-9.]/g, '')
       .replace(/^(\d*\.\d{0,2}).*$/, '$1');
     const parsed = parseFloat(sanitized) || 0.0;
-    console.log(typeof parsed);
     updateProducts({ id, field, value, set, invoice: invoiceData });
 
     value = sanitized;
@@ -151,7 +150,6 @@ export const actions = (set: (partial: Partial<State>) => void, get: () => State
     const netAmount = round2(
       invoiceData.products.reduce((sum, p) => sum + p.quantity * p.price, 0),
     );
-    console.log(invoiceData, netAmount);
     const grossAmount = round2(netAmount * (1 + invoiceData.vat / 100));
 
     set({ invoiceData: { ...invoiceData, netAmount, grossAmount } });

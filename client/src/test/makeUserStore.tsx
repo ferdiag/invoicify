@@ -56,6 +56,5 @@ export function makeUserStore(overrides?: Partial<UserStoreType>): UserStoreType
     invoiceData: baseInvoiceData,
     ...actions,
   };
-  console.log('makeUserStore called with overrides:', store);
   return { ...store, ...overrides };
 }
