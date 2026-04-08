@@ -32,13 +32,12 @@ export const actions = (set: (partial: Partial<State>) => void, get: () => State
     toast.success(message);
     setMode('login');
   },
-  //todo den Fehler in verschiedenen Sprachen ausgeben
   handleApiError: (error, t) => {
     let msg = undefined;
 
     if (axios.isAxiosError(error)) {
       const responseData = error.response?.data as { message?: string } | undefined;
-      msg = responseData?.message ?? t('auth.defaultError');
+      msg = responseData?.message ?? t('auth.errors.defaultError');
     }
     toast.error(msg, { position: 'bottom-center' });
   },
