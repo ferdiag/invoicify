@@ -86,8 +86,12 @@ const Auth: React.FC = () => {
             {...register('password', {
               required: t('validation.passwordRequired'),
               minLength: {
-                value: 6,
+                value: 8,
                 message: t('validation.passwordMinLength'),
+              },
+              maxLength: {
+                value: 72,
+                message: t('validation.passwordMaxLength'),
               },
               pattern: {
                 value:

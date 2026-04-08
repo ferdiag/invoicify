@@ -15,6 +15,16 @@ export default {
     registerSuccess: 'Registrierung erfolgreich! Bitte anmelden.',
     loginSuccess: 'Login war erfolgreich',
   },
+  validation: {
+    emailRequired: 'E-Mail ist erforderlich',
+    passwordRequired: 'Passwort ist erforderlich',
+    passwordMinLength: 'Das Passwort muss mindestens 8 Zeichen enthalten',
+    passwordMaxLength: 'Das Passwort darf maximal 72 Zeichen enthalten',
+    passwordPattern:
+      'Das Passwort muss einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten',
+    passwordHint:
+      'Verwende 8-72 Zeichen mit Großbuchstaben, Kleinbuchstaben, Zahl und Sonderzeichen.',
+  },
   CustomerDetail: {
     add: 'Neuen Kunden hinzufügen',
     edit: 'Änderungen speichern ',
