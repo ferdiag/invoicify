@@ -4,8 +4,8 @@ import { customers } from "../../db/schema";
 import createHttpError, { HttpError } from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
-export const handleDeleteCustomer = async (id: string): Promise<{ id: string }> => {
-  try {
+class DrizzleDeleteCustomerRepository implements DeleteCustomerRepository {
+  public async delete(id: string): Promise<{ id: string }> {
     const rows = await db
       .delete(customers)
       .where(eq(customers.id, id))
@@ -16,20 +16,32 @@ export const handleDeleteCustomer = async (id: string): Promise<{ id: string }> 
     }
 
     return { id: rows[0].id };
-  } catch (err: unknown) {
-    // bereits ein HttpError? → direkt weiterwerfen
-    if (err instanceof HttpError || createHttpError.isHttpError(err)) {
-      throw err;
-    }
-
-    // Postgres: invalid_text_representation (uuid parse error)
-    if (typeof err === "object" && err !== null && "code" in err) {
-      const code = (err as { code?: string }).code;
-      if (code === "22P02") {
-        throw new createHttpError.BadRequest(ERROR_MESSAGES.INVALID_CUSTOMER_ID);
-      }
-    }
-
-    throw new createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
   }
-};
+}
+
+export interface DeleteCustomerRepository {
+  delete(id: string): Promise<{ id: string }>;
+}
+
+export class DeleteCustomer {
+  constructor(private readonly deleteCustomerRepository: DeleteCustomerRepository) {}
+  public async execute(id: string): Promise<{ id: string }> {
+    try {
+      return await this.deleteCustomerRepository.delete(id);
+    } catch (err: unknown) {
+      if (err instanceof HttpError || createHttpError.isHttpError(err)) {
+        throw err;
+      }
+
+      if (typeof err === "object" && err !== null && "code" in err) {
+        const code = (err as { code?: string }).code;
+        if (code === "22P02") {
+          throw new createHttpError.BadRequest(ERROR_MESSAGES.INVALID_CUSTOMER_ID);
+        }
+      }
+
+      throw new createHttpError.InternalServerError(ERROR_MESSAGES.DATABASE_QUERY_FAILED);
+    }
+  }
+}
+export const deleteCustomerService = new DeleteCustomer(new DrizzleDeleteCustomerRepository());

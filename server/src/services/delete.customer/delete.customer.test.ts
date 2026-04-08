@@ -3,7 +3,7 @@ jest.mock("../../db/client", () => ({ db: { delete: jest.fn() } }));
 
 import { db } from "../../db/client";
 import createHttpError from "http-errors";
-import { handleDeleteCustomer } from "./delete.customer.service";
+import { deleteCustomerService } from "./delete.customer.service";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
 const mockDeleteReturning = (rows: Array<{ id: string }>) => {
@@ -26,12 +26,12 @@ describe("handleDeleteCustomer", () => {
   it("returns deleted id on success", async () => {
     const id = "11111111-2222-3333-4444-555555555555";
     mockDeleteReturning([{ id }]);
-    await expect(handleDeleteCustomer(id)).resolves.toEqual({ id });
+    await expect(deleteCustomerService.execute(id)).resolves.toEqual({ id });
   });
 
   it("returns 404 when no row deleted", async () => {
     mockDeleteReturning([]);
-    const p = handleDeleteCustomer("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+    const p = deleteCustomerService.execute("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 404,
@@ -41,14 +41,14 @@ describe("handleDeleteCustomer", () => {
 
   it("maps 22P02 to 400", async () => {
     mockDeleteThrow({ code: "22P02" });
-    const p = handleDeleteCustomer("invalid-uuid");
+    const p = deleteCustomerService.execute("invalid-uuid");
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({ status: 400 });
   });
 
   it("maps unknown db error to 500", async () => {
     mockDeleteThrow(new Error("DB down"));
-    const p = handleDeleteCustomer("11111111-2222-3333-4444-555555555555");
+    const p = deleteCustomerService.execute("11111111-2222-3333-4444-555555555555");
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 500,

@@ -6,24 +6,63 @@ import { users } from "../../db/schema";
 import { UserInsertType } from "../../types/database.type";
 import { MESSAGES } from "../../constants/successMessages";
 
-function extractPgCode(err: unknown): string | undefined {
-  const e = err as { code?: unknown; cause?: { code?: unknown } };
-  const code = e?.code ?? e?.cause?.code;
-  return typeof code === "string" ? code : undefined;
+export type RegisterInput = Pick<UserInsertType, "email" | "password">;
+
+type CreateUserInput = {
+  email: string;
+  password: string;
+};
+
+export interface RegisterUserRepository {
+  create(data: CreateUserInput): Promise<void>;
 }
-export const handleRegister = async (data: UserInsertType) => {
-  const { email, password } = data;
-  if (!email || !password) {
-    throw createError.BadRequest(ERROR_MESSAGES.EMAIL_OR_PASSWORD_REQUIRED);
+
+export interface PasswordHasher {
+  hash(value: string, saltRounds: number): Promise<string>;
+}
+
+class DrizzleRegisterUserRepository implements RegisterUserRepository {
+  public async create(data: CreateUserInput): Promise<void> {
+    await db.insert(users).values(data);
+  }
+}
+
+class BcryptPasswordHasher implements PasswordHasher {
+  public async hash(value: string, saltRounds: number): Promise<string> {
+    return bcrypt.hash(value, saltRounds);
+  }
+}
+
+export class RegisterService {
+  public constructor(
+    private readonly userRepository: RegisterUserRepository,
+    private readonly passwordHasher: PasswordHasher,
+    private readonly saltRounds = 10
+  ) {}
+
+  public async execute(data: RegisterInput) {
+    const { email, password } = data;
+
+    if (!email || !password) {
+      throw createError.BadRequest(ERROR_MESSAGES.EMAIL_OR_PASSWORD_REQUIRED);
+    }
+
+    const hashedPassword = await this.passwordHasher.hash(password, this.saltRounds);
+
+    try {
+      await this.userRepository.create({ email, password: hashedPassword });
+    } catch (err) {
+      this.handlePersistenceError(err);
+    }
+
+    return {
+      message: MESSAGES.REGISTER,
+      email,
+    };
   }
 
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  const newUser = { email, password: hashedPassword };
-  try {
-    await db.insert(users).values(newUser);
-  } catch (err) {
-    const code = extractPgCode(err);
+  private handlePersistenceError(err: unknown): never {
+    const code = this.extractPgCode(err);
     if (code) {
       switch (code) {
         case "23505":
@@ -39,17 +78,22 @@ export const handleRegister = async (data: UserInsertType) => {
       }
     }
 
-    // Fallback: auf Message-Matching (z. B. Drizzle ohne code durchgereicht)
-    const msg = (err as Error)?.message ?? "";
-    if (msg.includes("duplicate key value") || msg.includes("unique constraint")) {
+    const message = (err as Error)?.message ?? "";
+    if (message.includes("duplicate key value") || message.includes("unique constraint")) {
       throw createError.Conflict(ERROR_MESSAGES.EMAIL_EXISTS);
     }
 
     throw createError.InternalServerError(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 
-  return {
-    message: MESSAGES.REGISTER,
-    email,
-  };
-};
+  private extractPgCode(err: unknown): string | undefined {
+    const error = err as { code?: unknown; cause?: { code?: unknown } };
+    const code = error?.code ?? error?.cause?.code;
+    return typeof code === "string" ? code : undefined;
+  }
+}
+
+export const registerService = new RegisterService(
+  new DrizzleRegisterUserRepository(),
+  new BcryptPasswordHasher()
+);

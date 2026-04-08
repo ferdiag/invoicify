@@ -3,8 +3,8 @@ jest.mock("../../db/client", () => ({ db: { update: jest.fn() } }));
 import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
-import { handleEditCompany } from "../editCompany/edit.company";
-import { UserPatchType } from "../../zod/user.schema";
+import { editCompanyService } from "./edit.company";
+import { UserInsertType } from "../../types/database.type";
 
 type RowWithId = { id: string };
 
@@ -27,7 +27,7 @@ const mockUpdateThrow = (err?: unknown) => {
   });
 };
 
-describe("handleEditCompany", () => {
+describe("EditCompanyService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -36,15 +36,15 @@ describe("handleEditCompany", () => {
     const id = "11111111-2222-3333-4444-555555555555";
     mockUpdateReturning([{ id }]);
 
-    const patch: UserPatchType = { company: "ACME" };
-    await expect(handleEditCompany(id, patch)).resolves.toEqual({ id });
+    const patch: Partial<UserInsertType> = { company: "ACME" };
+    await expect(editCompanyService.execute(id, patch)).resolves.toEqual({ id });
   });
 
-  it("not found is mapped to 500 (current behavior)", async () => {
-    mockUpdateReturning([]); // keine Row zurück
+  it("maps not found to 500", async () => {
+    mockUpdateReturning([]);
 
-    const patch: UserPatchType = { company: "X" };
-    const p = handleEditCompany("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", patch);
+    const patch: Partial<UserInsertType> = { company: "X" };
+    const p = editCompanyService.execute("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", patch);
 
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
@@ -53,11 +53,11 @@ describe("handleEditCompany", () => {
     });
   });
 
-  it("db error → 500", async () => {
+  it("maps db errors to 500", async () => {
     mockUpdateThrow(new Error("DB down"));
 
-    const patch: UserPatchType = { company: "X" };
-    const p = handleEditCompany("11111111-2222-3333-4444-555555555555", patch);
+    const patch: Partial<UserInsertType> = { company: "X" };
+    const p = editCompanyService.execute("11111111-2222-3333-4444-555555555555", patch);
 
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({

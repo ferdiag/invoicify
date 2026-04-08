@@ -4,7 +4,7 @@ jest.mock("../../db/client", () => ({ db: { insert: jest.fn() } }));
 import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
-import { handleAddInvoice } from "./add.invoice.service";
+import { addInvoiceService } from "./add.invoice.service";
 import { InvoiceInsertType } from "../../types/database.type";
 
 const mockInsertSuccess = (id: string) => {
@@ -52,7 +52,7 @@ describe("handleAddInvoice", () => {
     const id = "1111111111122222223333333333";
     mockInsertSuccess(id);
 
-    const result = await handleAddInvoice(makeInvoicePayload());
+    const result = await addInvoiceService.execute(makeInvoicePayload());
     expect(result).toEqual({ id });
     expect(db.insert).toHaveBeenCalledTimes(1);
   });
@@ -60,7 +60,7 @@ describe("handleAddInvoice", () => {
   it("throws 500 with DATABASE_QUERY_FAILED on DB error", async () => {
     mockInsertThrow(new Error("DB down"));
 
-    const p = handleAddInvoice(makeInvoicePayload());
+    const p = addInvoiceService.execute(makeInvoicePayload());
     await expect(p).rejects.toMatchObject({
       status: 500,
       message: ERROR_MESSAGES.DATABASE_QUERY_FAILED,

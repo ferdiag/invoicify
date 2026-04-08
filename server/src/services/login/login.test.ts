@@ -1,103 +1,139 @@
-// Mocks
-jest.mock("../../db/client", () => ({ db: { select: jest.fn() } }));
-jest.mock("bcrypt", () => ({ compare: jest.fn() }));
-jest.mock("jsonwebtoken", () => ({ sign: jest.fn() }));
-
-import { db } from "../../db/client";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
-import { handleLogin } from "./login.service";
-import { UserInsertType, InvoiceInsertType } from "../../types/database.type";
-import { UserPatchType } from "../../zod/user.schema";
-import { CustomerInsertType } from "../../zod/customer.schema";
+import {
+  LoginInput,
+  LoginRepository,
+  LoginService,
+  PasswordComparator,
+  TokenSigner,
+} from "./login.service";
+import { CustomerSelectType, InvoiceSelectType, UserSelectType } from "../../types/database.type";
 
-// kleine Helper, um die Drizzle-Select-Kette zu simulieren
-const chain = (rows: UserInsertType[] | InvoiceInsertType[] | CustomerInsertType[]) => ({
-  from: () => ({ where: async () => rows }),
-});
+const createLoginService = (options?: {
+  findUserByEmail?: LoginRepository["findUserByEmail"];
+  findCustomersByUserId?: LoginRepository["findCustomersByUserId"];
+  findInvoicesByUserId?: LoginRepository["findInvoicesByUserId"];
+  compare?: PasswordComparator["compare"];
+  sign?: TokenSigner["sign"];
+}) => {
+  const loginRepository: LoginRepository = {
+    findUserByEmail: options?.findUserByEmail ?? jest.fn().mockResolvedValue(undefined),
+    findCustomersByUserId: options?.findCustomersByUserId ?? jest.fn().mockResolvedValue([]),
+    findInvoicesByUserId: options?.findInvoicesByUserId ?? jest.fn().mockResolvedValue([]),
+  };
+  const passwordComparator: PasswordComparator = {
+    compare: options?.compare ?? jest.fn().mockResolvedValue(true),
+  };
+  const tokenSigner: TokenSigner = {
+    sign: options?.sign ?? jest.fn().mockReturnValue("test-token-123"),
+  };
 
-describe("handleLogin", () => {
+  return {
+    service: new LoginService(loginRepository, passwordComparator, tokenSigner),
+    loginRepository,
+    passwordComparator,
+    tokenSigner,
+  };
+};
+
+describe("LoginService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("liefert Token und User-Payload bei Erfolg", async () => {
-    const user = {
+    const user: UserSelectType = {
       id: "11111111-2222-3333-4444-555555555555",
       email: "max.mustermann@example.com",
       password: "hashed",
-      name: "Max Mustermann",
+      company: "Mustermann GmbH",
+      phone: "",
+      address: "",
+      city: "",
+      zip: "",
+      country: "",
+      taxNumber: "",
     };
-    const customers = [
+    const customerRecords: CustomerSelectType[] = [
       {
         id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
         userId: user.id,
         name: "ACME GmbH",
+        contact: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        zip: "",
+        country: "",
       },
     ];
-    const invoices = [
+    const invoiceRecords: InvoiceSelectType[] = [
       {
         id: "99999999-8888-7777-6666-555555555555",
-        customerId: customers[0].id,
+        customerId: customerRecords[0].id,
         userId: user.id,
         name: "Website Redesign",
+        invoiceNumber: 1001,
         invoiceDate: "2025-09-10",
         dueDate: "2025-09-30",
         vat: 19,
-        netAmount: "129.00",
-        grossAmount: "153.51",
-        products: [
-          { id: "p-001", name: "Design Sprint", quantity: 2, price: 50.0 },
-          { id: "p-002", name: "Hosting (1 Monat)", quantity: 1, price: 29.0 },
-        ],
+        netAmount: 129,
+        grossAmount: 153.51,
       },
       {
         id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-        customerId: customers[0].id,
+        customerId: customerRecords[0].id,
         userId: user.id,
         name: "Monatliche Betreuung",
+        invoiceNumber: 1002,
         invoiceDate: "2025-08-01",
         dueDate: "2025-08-14",
         vat: 7,
-        netAmount: "300.00",
-        grossAmount: "321.00",
-        products: [{ id: "p-101", name: "Support-Paket", quantity: 10, price: 30.0 }],
+        netAmount: 300,
+        grossAmount: 321,
       },
     ];
+    const { service, loginRepository, passwordComparator, tokenSigner } = createLoginService({
+      findUserByEmail: jest.fn().mockResolvedValue(user),
+      findCustomersByUserId: jest.fn().mockResolvedValue(customerRecords),
+      findInvoicesByUserId: jest.fn().mockResolvedValue(invoiceRecords),
+    });
 
-    (db.select as jest.Mock)
-      .mockReturnValueOnce(chain([user]))
-      .mockReturnValueOnce(chain(customers))
-      .mockReturnValueOnce(chain(invoices));
-
-    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-    (jwt.sign as jest.Mock).mockReturnValue("test-token-123");
-
-    const res = await handleLogin({
+    const res = await service.execute({
       email: user.email,
       password: "SehrSicher!123",
-    } as UserInsertType);
+    } as LoginInput);
 
     expect(res.token).toBe("test-token-123");
     expect(res.user.email).toBe(user.email);
-    expect((res.user as UserPatchType).password).toBeUndefined();
-    expect(res.user.customers).toEqual(customers);
-    expect(res.user.invoices).toEqual(invoices);
+    expect("password" in res.user).toBe(false);
+    expect(res.user.customers).toEqual(customerRecords);
+    expect(res.user.invoices).toEqual(invoiceRecords);
+    expect(loginRepository.findUserByEmail).toHaveBeenCalledWith(user.email);
+    expect(passwordComparator.compare).toHaveBeenCalledWith("SehrSicher!123", user.password);
+    expect(tokenSigner.sign).toHaveBeenCalledWith({ email: user.email, id: user.id });
   });
 
   it("gibt 401 zurück, wenn Passwort falsch ist", async () => {
-    const user = {
+    const user: UserSelectType = {
       id: "11111111-2222-3333-4444-555555555555",
       email: "erika.mustermann@example.org",
       password: "hashed",
+      company: "",
+      phone: "",
+      address: "",
+      city: "",
+      zip: "",
+      country: "",
+      taxNumber: "",
     };
+    const { service } = createLoginService({
+      findUserByEmail: jest.fn().mockResolvedValue(user),
+      compare: jest.fn().mockResolvedValue(false),
+    });
 
-    (db.select as jest.Mock).mockReturnValueOnce(chain([user]));
-    (bcrypt.compare as jest.Mock).mockResolvedValue(false);
-
-    const p = handleLogin({ email: user.email, password: "Falsch!" } as UserInsertType);
+    const p = service.execute({ email: user.email, password: "Falsch!" } as LoginInput);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 401,
@@ -106,12 +142,14 @@ describe("handleLogin", () => {
   });
 
   it("gibt 401 zurück, wenn User nicht gefunden", async () => {
-    (db.select as jest.Mock).mockReturnValueOnce(chain([]));
+    const { service } = createLoginService({
+      findUserByEmail: jest.fn().mockResolvedValue(undefined),
+    });
 
-    const p = handleLogin({
+    const p = service.execute({
       email: "no.user@example.net",
       password: "egal",
-    } as UserInsertType);
+    } as LoginInput);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 401,
@@ -120,14 +158,40 @@ describe("handleLogin", () => {
   });
 
   it("mappt DB-Fehler beim User-Lookup auf 500", async () => {
-    (db.select as jest.Mock).mockImplementation(() => {
-      throw new Error("DB down");
+    const { service } = createLoginService({
+      findUserByEmail: jest.fn().mockRejectedValue(new Error("DB down")),
     });
 
-    const p = handleLogin({
+    const p = service.execute({
       email: "max.mustermann@example.com",
       password: "irrelevant",
-    } as UserInsertType);
+    } as LoginInput);
+    await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
+    await expect(p).rejects.toMatchObject({
+      status: 500,
+      message: ERROR_MESSAGES.DATABASE_QUERY_FAILED,
+    });
+  });
+
+  it("mappt DB-Fehler beim Laden der Relationen auf 500", async () => {
+    const user: UserSelectType = {
+      id: "11111111-2222-3333-4444-555555555555",
+      email: "max.mustermann@example.com",
+      password: "hashed",
+      company: "",
+      phone: "",
+      address: "",
+      city: "",
+      zip: "",
+      country: "",
+      taxNumber: "",
+    };
+    const { service } = createLoginService({
+      findUserByEmail: jest.fn().mockResolvedValue(user),
+      findCustomersByUserId: jest.fn().mockRejectedValue(new Error("DB down")),
+    });
+
+    const p = service.execute({ email: user.email, password: "SehrSicher!123" } as LoginInput);
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
       status: 500,
