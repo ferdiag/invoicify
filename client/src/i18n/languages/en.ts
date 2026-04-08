@@ -6,7 +6,7 @@ export default {
     getStarted: 'Register',
   },
   auth: {
-    errors: { defaultError: 'Es gab leider einen Fehler' },
+    errors: { defaultError: 'An error occurred. Please try again.' },
     placeholders: {
       email: 'E-Mail',
       password: 'Password',

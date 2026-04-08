@@ -6,7 +6,7 @@ export default {
   },
   auth: {
     errors: {
-      defaultError: 'An error occurred. Please try again.',
+      defaultError: 'Es gab leider einen Fehler',
     },
     placeholders: {
       email: 'E-Mail',
