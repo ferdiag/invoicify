@@ -8,7 +8,7 @@ import PrivateRoute from './PrivateRoute/PrivateRoute';
 const Auth = lazy(() => import('./pages/Auth/Auth'));
 const Home = lazy(() => import('./pages/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const AddCompanyData = lazy(() => import('./pages/EditCompanyData'));
+const AddCompanyData = lazy(() => import('./pages/EditUserData'));
 const CreateInvoice = lazy(() => import('./pages/invoice/CreateInvoice/CreateInvoice'));
 const CustomersPage = lazy(() => import('./pages/CustomersPage'));
 const CustomerDetail = lazy(() => import('./pages/CustomerDetail'));
