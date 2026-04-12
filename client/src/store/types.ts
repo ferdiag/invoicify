@@ -17,15 +17,16 @@ export interface Customer {
   address: string;
   city: string;
   zip: string;
+  taxNumber: string;
   country: string;
 }
 
-export type CustomerCreate = Customer & {
-  userId: string;
+export type CustomerCreate = Omit<Customer, 'id'> & {
+  userId?: never;
 };
 
-export type CustomerUpdate = Partial<Customer> & {
-  userId: string;
+export type CustomerUpdate = Partial<Omit<Customer, 'id'>> & {
+  userId?: never;
 };
 
 export type CreateCustomerResponse = { id: string } | Customer;
@@ -55,7 +56,7 @@ export interface FormField {
   placeholder: string;
   value: string;
 }
-export interface DynamicFormProps<T extends Record<string, unknown>> {
+export interface DynamicFormProps<T> {
   title?: string;
   fields: Field[];
   setState: React.Dispatch<React.SetStateAction<T>>;
@@ -114,7 +115,6 @@ export type UserStoreType = State & Actions;
 
 export interface Actions {
   logout: () => void;
-  setToken: (token: string) => void;
   deleteCustomer: (id: string) => void;
   loginSuccess: (
     data: { user: User; token: string },

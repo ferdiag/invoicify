@@ -5,4 +5,7 @@ export type UserInsertType = InferInsertModel<typeof users>;
 export type UserSelectType = InferSelectModel<typeof users>;
 
 export type CustomerInsertType = InferInsertModel<typeof customers>;
+export type CustomerSelectType = InferSelectModel<typeof customers>;
+
 export type InvoiceInsertType = InferInsertModel<typeof invoices>;
+export type InvoiceSelectType = InferSelectModel<typeof invoices>;
