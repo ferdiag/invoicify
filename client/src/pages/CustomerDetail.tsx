@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createFormData } from '../factories/createForms';
 import DynamicForm from '../components/DynamicForm/DynamicForm';
-import type { Customer } from '../store/types';
+import type { Customer, CustomerCreate, CustomerUpdate } from '../store/types';
 import { PATHS } from '../../../shared/paths';
 
 const keys: (keyof Customer)[] = [
@@ -27,6 +27,7 @@ const defaultCustomer: Customer = {
   address: '',
   city: '',
   zip: '',
+  taxNumber: '',
   country: '',
 };
 const CustomerDetail: React.FC = () => {
@@ -52,7 +53,11 @@ const CustomerDetail: React.FC = () => {
 
   const handleSaveNewCustomer = async (): Promise<void> => {
     if (!user) return;
-    const payload = { ...customer, userId: user.id };
+    const customerWithoutId = Object.fromEntries(
+      Object.entries(customer).filter(([key]) => key !== 'id'),
+    ) as Omit<Customer, 'id'>;
+
+    const payload: CustomerCreate | CustomerUpdate = customerWithoutId;
 
     const path = id ? PATHS.CUSTOMERS.buildById(id) : PATHS.CUSTOMERS.ROOT;
     const action = id ? 'patch' : 'post';
@@ -73,11 +78,11 @@ const CustomerDetail: React.FC = () => {
   };
 
   return (
-    <DynamicForm
+    <DynamicForm<Customer>
       title={id ? t('CustomerDetail.edit') : t('CustomerDetail.add')}
       fields={formData}
       setState={setCustomer}
-      onSubmit={() => void handleSaveNewCustomer}
+      onSubmit={() => void handleSaveNewCustomer()}
       submitLabel={t('buttons.save')}
     />
   );

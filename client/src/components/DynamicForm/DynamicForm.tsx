@@ -3,7 +3,7 @@ import CTAButton from '../Button/Button';
 import Input from '../TextInput/TextInput';
 import type { DynamicFormProps } from '../../store/types';
 
-const DynamicForm = <T extends Record<string, unknown>>({
+const DynamicForm = <T,>({
   title,
   fields,
   setState,
