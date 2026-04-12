@@ -1,14 +1,13 @@
 // actions.ts
 import { toast } from 'react-toastify';
+import { api } from '../lib/api';
 import axios from 'axios';
 import type { State, Actions, Customer, UpdateProducts, ProductWithId } from './types';
 import { t } from 'i18next';
 
 export const actions = (set: (partial: Partial<State>) => void, get: () => State): Actions => ({
   logout: () => set({ user: null, token: null }),
-  setToken: (token) => {
-    set({ token });
-  },
+
   deleteCustomer: (id) => {
     const { user } = get();
     if (!user) return;
@@ -23,7 +22,8 @@ export const actions = (set: (partial: Partial<State>) => void, get: () => State
   loginSuccess: (data, message, navigate): void => {
     toast.success(message, { position: 'bottom-center' });
     set({ user: data.user, token: data.token });
-
+    if (data.token) api.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+    else delete api.defaults.headers.common.Authorization;
     void navigate('/dashboard');
   },
 
