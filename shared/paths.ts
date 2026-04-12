@@ -5,12 +5,12 @@ export const PATHS = {
   },
   CUSTOMERS: {
     ROOT: "/customers",
-    BY_ID: `/customers/id`,
+    BY_ID: `/customers/:id`,
     buildById: (id: string) => `/customers/${id}`,
   },
   USERS: {
     ROOT: "/users",
-    BY_ID: `/users/id`,
+    BY_ID: `/users/:id`,
     buildById: (id: string) => `/users/${id}`,
   },
   INVOICES: {

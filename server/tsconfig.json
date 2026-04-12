@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["src/*", "../shared/*"]
+      "@/*": ["./src/*", "../shared/*"]
     },
 
     "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
