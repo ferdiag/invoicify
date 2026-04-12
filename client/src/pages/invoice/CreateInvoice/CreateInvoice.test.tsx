@@ -15,9 +15,6 @@ vi.mock('../../../lib/api', () => ({
   },
 }));
 
-const toApiMock = vi.hoisted(() => vi.fn((p: string) => `/api${p}`));
-vi.mock('../../../lib/toApi', () => ({ toApi: (p: string) => toApiMock(p) }));
-
 vi.mock('../../../../../shared/paths', () => ({
   PATHS: { INVOICES: { ROOT: '/invoices' } },
 }));
@@ -90,7 +87,6 @@ function setupWithState(state: {
 
   Object.values(storeState.fns).forEach((fn) => fn.mockClear());
   (postMock as unknown as jest.Mock).mockClear?.();
-  toApiMock.mockClear();
   toastMock.success.mockClear();
   toastMock.error.mockClear();
   storeState.fns.handlePriceChange.mockReturnValue(state.priceChangeReturn ?? '12.30');

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useUserStore } from '../../../store/userStore';
 import type { Customer, ProductWithId } from '../../../store/types';
-import { toApi } from '../../../lib/toApi';
 import { PATHS } from '../../../../../shared/paths';
 import { api } from '../../../lib/api';
 
@@ -34,7 +33,7 @@ const CreateInvoice: React.FC = () => {
       (cust: Customer) => cust.id === invoiceData.customerId,
     )?.name;
 
-    const path = toApi(PATHS.INVOICES.ROOT);
+    const path = PATHS.INVOICES.ROOT;
 
     const cleanedProducts = invoiceData.products.map((p) => ({ ...p, name: p.name.trim() }));
 
@@ -50,7 +49,7 @@ const CreateInvoice: React.FC = () => {
       (p) => !p.name || Number(p.quantity) <= 0 || Number(p.price) <= 0,
     );
 
-    Object.entries(payload).forEach(([_, value]) => {
+    Object.entries(payload).forEach(([, value]) => {
       if (value === '' || value === null || value === undefined) {
         isFieldEmpty = true;
         return;

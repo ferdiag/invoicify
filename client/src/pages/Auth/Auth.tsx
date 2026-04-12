@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { PATHS } from '../../../../shared/paths';
 import { useUserStore } from '../../store/userStore';
 import { api } from '../../lib/api';
-import { toApi } from '../../lib/toApi';
 import CTAButton from '../../components/Button/Button';
 import type { AuthData, User } from '../../store/types';
 
@@ -24,13 +23,13 @@ const Auth: React.FC = () => {
     login: PATHS.AUTH.LOGIN,
     register: PATHS.AUTH.REGISTER,
   };
-
+  console.log(AUTH_ENDPOINT);
   const { t } = useTranslation();
   const { loginSuccess, registerSuccess, handleApiError } = useUserStore();
 
   const onSubmit = async (data: AuthData) => {
     try {
-      const path = toApi(AUTH_ENDPOINT[mode]);
+      const path = AUTH_ENDPOINT[mode];
       const res = await api.post(path, data);
       const response = res.data as { user: User; token: string };
       if ([200, 201].includes(res.status)) {
