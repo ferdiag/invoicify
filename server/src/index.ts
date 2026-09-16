@@ -13,7 +13,6 @@ import { registerErrorHandler } from "./middleware/registerErrorHandler";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import pdfRoute from "./routes/invoice.pdf.route";
-
 dotenv.config();
 
 const app = Fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();

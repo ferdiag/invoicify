@@ -6,12 +6,14 @@ import {
   CustomerPatchSchema,
   IdParamSchema,
 } from "../../zod/customer.schema";
+import { authenticate } from "../../middleware/auth";
 import { customerController } from "./customer.controller";
 
 export const customerRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
     PATHS.CUSTOMERS.ROOT,
     {
+      preHandler: [authenticate],
       schema: {
         tags: [TAGS.CUSTOMER],
         summary: SUMMARIES.CREATE_CUSTOMER,
@@ -25,6 +27,7 @@ export const customerRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     PATHS.CUSTOMERS.BY_ID,
     {
+      preHandler: [authenticate],
       schema: {
         tags: [TAGS.CUSTOMER],
         summary: SUMMARIES.UPDATE_CUSTOMER,
@@ -39,6 +42,7 @@ export const customerRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.delete(
     PATHS.CUSTOMERS.BY_ID,
     {
+      preHandler: [authenticate],
       schema: {
         tags: [TAGS.CUSTOMER],
         summary: SUMMARIES.DELETE_CUSTOMER,
