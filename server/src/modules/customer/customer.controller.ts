@@ -5,25 +5,22 @@ import {
   editCustomerService,
 } from "@/services/services.container";
 import { CustomerInsertType, CustomerPatchType } from "@/zod/customer.schema";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply } from "fastify";
 
 type IdParams = { id: string };
 
 export class CustomerController {
-  public async add(req: FastifyRequest<{ Body: CustomerInsertType }>, res: FastifyReply) {
+  public async add(req: { body: CustomerInsertType }, res: FastifyReply) {
     const response = await addCustomerService.execute(req.body);
     return res.status(HTTP.CREATED).send(response);
   }
 
-  public async edit(
-    req: FastifyRequest<{ Params: IdParams; Body: CustomerPatchType }>,
-    res: FastifyReply
-  ) {
+  public async edit(req: { params: IdParams; body: CustomerPatchType }, res: FastifyReply) {
     const response = await editCustomerService.execute(req.params.id, req.body);
     return res.status(HTTP.OK).send(response);
   }
 
-  public async delete(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply) {
+  public async delete(req: { params: IdParams }, res: FastifyReply) {
     await deleteCustomerService.execute(req.params.id);
     return res.status(HTTP.NO_CONTENT).send();
   }
