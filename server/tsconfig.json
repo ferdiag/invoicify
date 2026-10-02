@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "bundler",
+    "types": ["node", "jest"],
     "paths": {
       "@/*": ["./src/*", "../shared/*"]
     },
