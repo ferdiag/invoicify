@@ -3,7 +3,7 @@ jest.mock("../../db/client", () => ({ db: { update: jest.fn() } }));
 import createHttpError from "http-errors";
 import { db } from "../../db/client";
 import { ERROR_MESSAGES } from "../../constants/errorMessages";
-import { editCompanyService } from "./edit.company";
+import { editCompanyService } from "./edit.company.service";
 import { UserInsertType } from "../../types/database.type";
 
 type RowWithId = { id: string };
