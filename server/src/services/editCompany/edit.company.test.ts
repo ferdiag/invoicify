@@ -40,7 +40,7 @@ describe("EditCompanyService", () => {
     await expect(editCompanyService.execute(id, patch)).resolves.toEqual({ id });
   });
 
-  it("maps not found to 500", async () => {
+  it("maps not found to specific http error", async () => {
     mockUpdateReturning([]);
 
     const patch: Partial<UserInsertType> = { company: "X" };
@@ -48,8 +48,8 @@ describe("EditCompanyService", () => {
 
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
-      status: 500,
-      message: ERROR_MESSAGES.DATABASE_QUERY_FAILED,
+      status: 404,
+      message: ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE,
     });
   });
 

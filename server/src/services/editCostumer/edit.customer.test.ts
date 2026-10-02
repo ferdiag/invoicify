@@ -42,7 +42,7 @@ describe("EditCustomerService", () => {
     });
   });
 
-  it("maps not found to 500", async () => {
+  it("maps not found to specific http error", async () => {
     mockUpdateReturning([]);
 
     const patch: Partial<CustomerInsertType> = { name: "X" };
@@ -50,8 +50,8 @@ describe("EditCustomerService", () => {
 
     await expect(p).rejects.toBeInstanceOf(createHttpError.HttpError);
     await expect(p).rejects.toMatchObject({
-      status: 500,
-      message: ERROR_MESSAGES.DATABASE_QUERY_FAILED,
+      status: 404,
+      message: ERROR_MESSAGES.NO_CUSTOMER_FOUND_UPDATE,
     });
   });
 
